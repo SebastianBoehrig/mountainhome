@@ -1,0 +1,20 @@
+meta {
+  name: Update Dwarf
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{host}}/dwarf/{{dwarfId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Gloina",
+    "age": 300,
+    "heightInCm": 120,
+    "partner": 3
+  }
+}

@@ -1,0 +1,18 @@
+meta {
+  name: Update Fortress
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{host}}/fortress/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Badagund",
+    "creationYear": 5231
+  }
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Create Fortress
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/fortress
+  body: json
+  auth: none
+}
+
+headers {
+  KingId: 2
+}
+
+body:json {
+  {
+    "name":"Gundabad",
+    "creationYear":5300
+  }
+}

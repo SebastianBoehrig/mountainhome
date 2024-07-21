@@ -1,0 +1,24 @@
+I want to create Objects directly and empty
+and create them with a reference to another already existing Object preassigned
+I also want to be able to assign specific attributes like partner through a special Rest call
+
+isExists should not be called in the controller! it is just a crutch
+
+add all the other stuff
+
+a fortress should always start with enough food to build 3 workstations
+
+
+/dwarf/{id}/work/{workstationTypeId}/job/{jobId}
+/dwarf/{id}/work/{workstationTypeName}/job/{jobId}
+/dwarf/{id}/work/{workstationTypeId}/job/{jobName}
+/dwarf/{id}/work/{workstationTypeName}/job/{jobName} in a working controller. Returns a Map of Foodstores to fillevel (Int)
+
+/workstationType/{id}/job
+/workstationType/{name}/job returns a list of all jobs on this type
+
+/workstationType/job returns a list of all wkokstationtypes and jobs
+
+/fortress/{id}/health returns a map of dwarves to healths. sorted by health
+
+/day returns a list of fortresses, their name, and their map of foodstores to fillevels and a list of deaths in the fortress -->last
