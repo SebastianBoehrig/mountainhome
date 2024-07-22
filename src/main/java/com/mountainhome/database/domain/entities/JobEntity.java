@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "job")
 public class JobEntity {
@@ -23,14 +20,11 @@ public class JobEntity {
     private String name;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name="workstation_id")
     private WorkstationTypeEntity workstationType;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "job_to_inputs")
-    private List<ResourceEntity> inputs;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+    private List<JobInputEntity> inputs;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="job_to_products")
-    private List<ResourceEntity> products;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+    private List<JobProductEntity> products;
 }

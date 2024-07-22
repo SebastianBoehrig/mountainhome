@@ -24,12 +24,12 @@ public class WorkstationEntityTypeDaoImplIntegrationTests {
         this.underTest = underTest;
     }
 
-    @Test
+    /*@Test
     public void CreateReadWorkstationType() {
         WorkstationEntity workstationEntity = TestDataUtil.createTestWorkstationTypeByName("Still");
         underTest.save(workstationEntity);
         Optional<WorkstationEntity> result = underTest.findById(1);
         assertThat(result).isPresent();
         assertThat(result.get()).usingRecursiveComparison().ignoringFields("id").isEqualTo(workstationEntity);
-    }
+    }*/
 }

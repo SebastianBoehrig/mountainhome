@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "resource_store")
 public class ResourceStoreEntity {
+    //TODO maybe rename to FortressResource?
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,10 +22,8 @@ public class ResourceStoreEntity {
     private Integer itemCount;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "fortress_id")
     private FortressEntity fortress;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "resource_id")
     private ResourceEntity resource;
 }

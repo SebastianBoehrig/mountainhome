@@ -64,12 +64,10 @@ public class FortressMapper implements Mapper<FortressEntity, FortressDto> {
 
     private Map<String, Integer> setResourceStoreValueMap(MappingContext<List<ResourceStoreEntity>, Map<String, Integer>> context) {
         List<ResourceStoreEntity> resourceStoreEntityList = context.getSource();
-        //if (resourceStoreEntityList == null) return null;
+        if (resourceStoreEntityList == null) return null;
 
         Map<String, Integer> resourceStoreValueMap = new HashMap<>();
-        for (ResourceStoreEntity r : resourceStoreEntityList) {
-            resourceStoreValueMap.put(r.getResource().getName(), r.getItemCount());
-        }
+        resourceStoreEntityList.forEach(resourceStoreEntity -> resourceStoreValueMap.put(resourceStoreEntity.getResource().getName(), resourceStoreEntity.getItemCount()));
         return resourceStoreValueMap;
     }
 

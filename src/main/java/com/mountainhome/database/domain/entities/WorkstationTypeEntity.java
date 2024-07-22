@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "workstationType")
 public class WorkstationTypeEntity {
@@ -22,6 +19,6 @@ public class WorkstationTypeEntity {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true, mappedBy = "workstationType")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workstationType")
     private List<JobEntity> jobs;
 }

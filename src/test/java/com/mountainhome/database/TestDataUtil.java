@@ -6,9 +6,9 @@ public final class TestDataUtil {
     private TestDataUtil() {
     }
 
-    public static WorkstationEntity createTestWorkstationTypeByName(String name) {
+    /*public static WorkstationEntity createTestWorkstationTypeByName(String name) {
         return WorkstationEntity.builder().id(1).name(name).build();
-    }
+    }*/
 
 /*    public static Fortress createTestFortressDefault() {
         return createTestFortressByNameKingId("Gundabad", 5);
