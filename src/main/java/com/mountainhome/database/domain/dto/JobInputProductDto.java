@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobInProductDto {
+public class JobInputProductDto {
     private String resourceName;
     private Integer amount;
     private Integer resourceId;
