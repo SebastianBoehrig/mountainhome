@@ -10,5 +10,4 @@ public class MountainhomeApplication {
         SpringApplication.run(MountainhomeApplication.class, args);
     }
     // TODO look at all the startup warning msg!
-    // TODO remove exesively large mariadb logfiles!
 }
