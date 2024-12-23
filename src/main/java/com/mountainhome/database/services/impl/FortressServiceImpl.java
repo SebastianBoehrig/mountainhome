@@ -60,16 +60,6 @@ public class FortressServiceImpl implements FortressService {
     }
 
     @Override
-    public boolean isExists(int id) {
-        return fortressRepository.existsById(id);
-    }
-
-    @Override
-    public boolean isExists(String name) {
-        return !fortressRepository.findByName(name).isEmpty();
-    }
-
-    @Override
     public FortressEntity updateFortress(int id, FortressEntity fortressEntity) {
         fortressEntity.setId(id);
         return fortressRepository.findById(id).map(existingFortress -> {

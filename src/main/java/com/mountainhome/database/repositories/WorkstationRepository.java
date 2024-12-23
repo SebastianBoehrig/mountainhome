@@ -5,6 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WorkstationRepository extends CrudRepository<WorkstationEntity, Integer> {
-    boolean existsByFortressIdAndWorkstationTypeName(int id, String name);
-}
+public interface WorkstationRepository extends CrudRepository<WorkstationEntity, Integer> { }

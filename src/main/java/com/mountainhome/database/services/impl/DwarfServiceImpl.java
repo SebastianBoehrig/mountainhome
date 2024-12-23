@@ -40,7 +40,7 @@ public class DwarfServiceImpl implements DwarfService {
         }
 
         List<JobSkillEntity> jobSkillList = new ArrayList<>();
-        jobRepository.findAll().forEach(job-> jobSkillList.add(JobSkillEntity.builder().dwarf(dwarfEntity).level(0).job(job).build()));
+        jobRepository.findAll().forEach(job -> jobSkillList.add(JobSkillEntity.builder().dwarf(dwarfEntity).level(0).job(job).build()));
         dwarfEntity.setJobSkill(jobSkillList);
 
         return dwarfRepository.save(dwarfEntity);
@@ -59,11 +59,6 @@ public class DwarfServiceImpl implements DwarfService {
     @Override
     public List<DwarfEntity> getDwarvesByName(String name) {
         return dwarfRepository.findByName(name);
-    }
-
-    @Override
-    public boolean isExists(int id) {
-        return dwarfRepository.existsById(id);
     }
 
     @Override

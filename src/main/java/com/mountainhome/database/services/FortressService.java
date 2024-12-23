@@ -14,9 +14,6 @@ public interface FortressService {
 
     List<FortressEntity> getFortressesByName(String name);
 
-    boolean isExists(int id);
-    boolean isExists(String name);
-
     FortressEntity updateFortress(int id, FortressEntity fortressEntity);
 
     FortressEntity crownKing(int id, Integer kingId);

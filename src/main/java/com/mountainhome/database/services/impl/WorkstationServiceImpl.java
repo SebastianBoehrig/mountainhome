@@ -8,10 +8,13 @@ import com.mountainhome.database.repositories.WorkstationRepository;
 import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import com.mountainhome.database.services.WorkstationService;
 import lombok.extern.java.Log;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Log
@@ -30,9 +33,9 @@ public class WorkstationServiceImpl implements WorkstationService {
     @Override
     public FortressEntity createWorkstation(int id, Integer workstationTypeId) {
         FortressEntity fortress = fortressRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Fortress does not exist, however isExist finds the id"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fortress does not exist"));
         WorkstationTypeEntity workstationType = workstationTypeRepository.findById(workstationTypeId)
-                .orElseThrow(() -> new NoSuchElementException("Workstation does not exist, however isExistType finds the id"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workstation does not exist"));
         WorkstationEntity workstation = WorkstationEntity.builder().fortress(fortress).workstationType(workstationType).build();
         workstationRepository.save(workstation);
         return fortress;
@@ -40,21 +43,20 @@ public class WorkstationServiceImpl implements WorkstationService {
 
     @Override
     public List<WorkstationTypeEntity> getWorkstationTypes() {
-        return StreamSupport.stream(workstationTypeRepository.findAll().spliterator(), false).toList();
+        List<WorkstationTypeEntity> workstationTypes = new java.util.ArrayList<>(StreamSupport.stream(workstationTypeRepository.findAll().spliterator(), false).toList());
+        workstationTypes.forEach(workstationType -> workstationType.setJobs(List.of()));
+        workstationTypes.sort(Comparator.comparingInt(WorkstationTypeEntity::getId));
+        return workstationTypes;
     }
 
     @Override
-    public boolean isExists(int id) {
-        return workstationRepository.existsById(id);
+    public Optional<WorkstationTypeEntity> getJobByWorkstationTypeId(int id) {
+        return workstationTypeRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(int fortress_id, String workstationName) {
-        return workstationRepository.existsByFortressIdAndWorkstationTypeName(fortress_id, workstationName);
-    }
-
-    @Override
-    public boolean isExistsType(int id) {
-        return workstationTypeRepository.existsById(id);
+    public Optional<WorkstationTypeEntity> getJobByWorkstationTypeName(String name) {
+        Optional<WorkstationTypeEntity> a=workstationTypeRepository.findByName(name);
+        return a;
     }
 }

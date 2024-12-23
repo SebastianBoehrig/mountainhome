@@ -8,6 +8,11 @@ add all the other stuff
 
 a fortress should always start with enough food to build 3 workstations
 
+TODO rn:
+own command for jobskill of a dwarf
+own command for foodstores of a fortress
+to marry dwarfs must be in the same fortress
+
 
 /dwarf/{id}/work/{workstationTypeId}/job/{jobId}
 /dwarf/{id}/work/{workstationTypeName}/job/{jobId}
@@ -22,3 +27,16 @@ a fortress should always start with enough food to build 3 workstations
 /fortress/{id}/health returns a map of dwarves to healths. sorted by health
 
 /day returns a list of fortresses, their name, and their map of foodstores to fillevels and a list of deaths in the fortress -->last
+
+
+
+Nice query:
+SELECT j.id ,j.name AS 'job',
+GROUP_CONCAT(DISTINCT r.name, ': ', i.amount SEPARATOR ', ') AS 'inputs',
+GROUP_CONCAT(DISTINCT r2.name, ': ', p.amount SEPARATOR ', ') AS 'products'
+FROM job j LEFT JOIN job_input i ON j.id=i.job_id
+LEFT JOIN job_product p ON j.id=p.job_id
+LEFT JOIN resource r ON i.resource_id=r.id
+LEFT JOIN resource r2 ON p.resource_id=r2.id
+GROUP BY j.id
+ORDER BY j.id ASC

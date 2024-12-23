@@ -58,12 +58,11 @@ public class DwarfMapper implements Mapper<DwarfEntity, DwarfDto> {
     private Map<String, Integer> setJobSkillValueMap(MappingContext<List<JobSkillEntity>, Map<String, Integer>> context) {
         List<JobSkillEntity> jobSkillEntityList = context.getSource();
         Map<String, Integer> jobSkillValueMap = new HashMap<>();
-        jobSkillEntityList.forEach(jobSkillEntity -> jobSkillValueMap.put(jobSkillEntity.getJob().getName(),jobSkillEntity.getLevel()));
+        jobSkillEntityList.forEach(jobSkillEntity -> jobSkillValueMap.put(jobSkillEntity.getJob().getName(), jobSkillEntity.getLevel()));
         return jobSkillValueMap;
     }
 
     private PropertyMap<DwarfDto, DwarfEntity> getPropertyMapFrom() {
-        Converter<Integer, DwarfEntity> convertIdToDwarfEntity = this::setPartner;
         Converter<Integer, FortressEntity> convertIdToFortressEntity = this::setFortress;
         return new PropertyMap<>() {
             @Override
@@ -80,23 +79,9 @@ public class DwarfMapper implements Mapper<DwarfEntity, DwarfDto> {
         };
     }
 
-    private DwarfEntity setPartner(MappingContext<Integer, DwarfEntity> context) {
-        //disabled until I can figure a way out to marry both properly
-        Integer id = context.getSource();
-        if (id == null) return null;
-        DwarfEntity partner = dwarfRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Partner Dwarf doesn't exist!"));
-        if (partner.getPartner() != null) {
-            partner.getPartner().setPartner(null);
-        }
-        //set partner's partner to this new dwarf
-        return partner;
-    }
-
     private FortressEntity setFortress(MappingContext<Integer, FortressEntity> context) {
         Integer id = context.getSource();
         if (id == null) return null;
         return fortressRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fortress doesn't exist!"));
     }
-
-    //TODO handle jobSkill map
 }

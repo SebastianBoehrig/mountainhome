@@ -15,5 +15,6 @@ public class JobDto {
     private Integer id;
     private String name;
     private Integer workstationTypeId;
-    private List<ResourceDto> products;
+    private List<JobInputProductDto> inputs;
+    private List<JobInputProductDto> products;
 }
