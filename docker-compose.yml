@@ -12,7 +12,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./Mariadb/volumes:/var/lib/mysql
+      - ./Mariadb:/var/lib/mysql
 #Create database mountainhome - > needs to be done at startup #TODO create MDB properly and remove the dir from github!
 
   adminer:
