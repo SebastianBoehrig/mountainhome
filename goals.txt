@@ -29,6 +29,19 @@ to marry dwarfs must be in the same fortress
 /day returns a list of fortresses, their name, and their map of foodstores to fillevels and a list of deaths in the fortress -->last
 
 
+There are warning in the Tests concerning the javaagent dynamic loading. Check those out when you have time
+
+
+## time concept
+
+- start at year 0
+- each month is 12 days
+- each year has 9 months: 2 spring - 1 summer - 2 autumn - 4 winter
+- time has no effect on the crop yields
+- after all actions have been taken, advance a day with a special command to get to the next day
+- fortress get created in year 0 and then time counts automatically
+- date is saved in a table?
+
 
 Nice query:
 SELECT j.id ,j.name AS 'job',

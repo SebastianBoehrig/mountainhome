@@ -7,7 +7,7 @@ import com.mountainhome.database.repositories.FortressRepository;
 import com.mountainhome.database.repositories.WorkstationRepository;
 import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import com.mountainhome.database.services.WorkstationService;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-@Log
+@Slf4j
 @Service
 public class WorkstationServiceImpl implements WorkstationService {
     private final WorkstationRepository workstationRepository;
@@ -56,7 +56,6 @@ public class WorkstationServiceImpl implements WorkstationService {
 
     @Override
     public Optional<WorkstationTypeEntity> getJobByWorkstationTypeName(String name) {
-        Optional<WorkstationTypeEntity> a=workstationTypeRepository.findByName(name);
-        return a;
+        return workstationTypeRepository.findByName(name);
     }
 }

@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +14,6 @@ public class FortressDto {
     private String name;
     private Integer creationYear;
     private Integer kingId;
-    private Map<String, Integer> workstationCount;
-    private Map<String, Integer> resourceStores;
+    //private Map<String, Integer> workstationCount;
+    //private Map<String, Integer> resourceStores;
 }

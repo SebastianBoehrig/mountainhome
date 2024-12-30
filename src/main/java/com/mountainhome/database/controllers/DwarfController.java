@@ -2,29 +2,31 @@ package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.DwarfDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
-import com.mountainhome.database.mappers.Mapper;
+import com.mountainhome.database.mappers.DwarfMapper;
 import com.mountainhome.database.services.DwarfService;
 import com.mountainhome.database.services.FortressService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@Slf4j
 public class DwarfController {
+    protected final DwarfMapper dwarfMapper;
     private final DwarfService dwarfService;
     private final FortressService fortressService;
-    private final Mapper<DwarfEntity, DwarfDto> dwarfMapper;
 
-    public DwarfController(DwarfService dwarfService, FortressService fortressService, Mapper<DwarfEntity, DwarfDto> dwarfMapper) {
+    public DwarfController(DwarfService dwarfService, FortressService fortressService, DwarfMapper dwarfMapper) {
         this.dwarfService = dwarfService;
         this.fortressService = fortressService;
         this.dwarfMapper = dwarfMapper;
     }
 
-    @GetMapping(path = "/dwarves")
+    /*@GetMapping(path = "/dwarves")
     public List<DwarfDto> getDwarves() {
         List<DwarfEntity> dwarfEntityList = dwarfService.getDwarves();
         return dwarfEntityList.stream().map(dwarfMapper::mapTo).toList();
@@ -43,18 +45,36 @@ public class DwarfController {
     public List<DwarfDto> getDwarvesByName(@PathVariable("name") String name) {
         List<DwarfEntity> dwarfEntityList = dwarfService.getDwarvesByName(name);
         return dwarfEntityList.stream().map(dwarfMapper::mapTo).toList();
-    }
+    }*/
 
-    @PostMapping(path = "/dwarf")
+    /*@PostMapping(path = "/dwarf")
     public ResponseEntity<DwarfDto> createDwarf(@RequestBody DwarfDto dwarfDto) {
         DwarfEntity dwarfEntity = dwarfMapper.mapFrom(dwarfDto);
         // TODO: check if dwarf has age>0
         // assign fav_food.
         DwarfEntity savedDwarf = dwarfService.createDwarf(dwarfEntity);
         return new ResponseEntity<>(dwarfMapper.mapTo(savedDwarf), HttpStatus.CREATED);
+    }*/
+
+    @PostMapping(path = "/dwarf")
+    public ResponseEntity<DwarfDto> createDwarf(@RequestBody DwarfDto dwarf) {
+        // pre-filter
+        if (dwarf.getName() == null) {
+            log.error("got a createDwarf request without a name");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Every dwarf has a name!");
+        } else if (dwarf.getFortressId() == null) {
+            log.error("got a createDwarf request without a fortressId");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Every dwarf has a fortress!");
+        }
+        // map
+        DwarfEntity dwarfEntity = dwarfMapper.toDwarfEntity(dwarf);
+        // execute
+        DwarfEntity createdDwarf = dwarfService.createDwarf(dwarfEntity, dwarf.getFortressId());
+        // map n return
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(createdDwarf), HttpStatus.CREATED);
     }
 
-    @PatchMapping(path = "/dwarf/{id}")
+    /*@PatchMapping(path = "/dwarf/{id}")
     public ResponseEntity<DwarfDto> updateDwarf(@PathVariable("id") int id, @RequestBody DwarfDto dwarfDto) {
         DwarfEntity dwarfEntity = dwarfMapper.mapFrom(dwarfDto);
         DwarfEntity updatedDwarf = dwarfService.updateDwarf(id, dwarfEntity);
@@ -72,5 +92,5 @@ public class DwarfController {
         List<DwarfEntity> updatedDwarves = dwarfService.marryDwarves(id, partnerId);
         List<DwarfDto> dwarfDtoList = updatedDwarves.stream().map(dwarfMapper::mapTo).toList();
         return new ResponseEntity<>(dwarfDtoList, HttpStatus.OK);
-    }
+    }*/
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FortressService {
-    FortressEntity createFortress(FortressEntity fortressEntity);
+    FortressEntity createFortress(FortressEntity fortressEntity, Integer kingId);
 
     List<FortressEntity> getFortresses();
 

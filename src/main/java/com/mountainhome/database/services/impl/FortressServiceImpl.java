@@ -1,3 +1,4 @@
+/*
 package com.mountainhome.database.services.impl;
 
 import com.mountainhome.database.domain.entities.DwarfEntity;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.Spliterator;
 import java.util.stream.StreamSupport;
 
-@Log
+@Slf4j
 @Service
 public class FortressServiceImpl implements FortressService {
     private final FortressRepository fortressRepository;
@@ -86,3 +87,4 @@ public class FortressServiceImpl implements FortressService {
         return fortressRepository.save(fortress);
     }
 }
+*/

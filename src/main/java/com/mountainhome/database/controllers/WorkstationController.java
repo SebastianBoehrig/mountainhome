@@ -1,3 +1,4 @@
+/*
 package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.FortressDto;
@@ -61,3 +62,4 @@ public class WorkstationController {
         return new ResponseEntity<>(fortressMapper.mapTo(fortressEntity), HttpStatus.CREATED);
     }
 }
+*/

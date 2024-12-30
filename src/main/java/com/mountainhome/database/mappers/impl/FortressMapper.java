@@ -1,3 +1,4 @@
+/*
 package com.mountainhome.database.mappers.impl;
 
 import com.mountainhome.database.domain.dto.FortressDto;
@@ -92,3 +93,4 @@ public class FortressMapper implements Mapper<FortressEntity, FortressDto> {
         return dwarfRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "King doesn't exist!"));
     }
 }
+*/

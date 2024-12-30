@@ -1,3 +1,4 @@
+/*
 package com.mountainhome.database.services.impl;
 
 import com.mountainhome.database.domain.entities.DwarfEntity;
@@ -8,6 +9,7 @@ import com.mountainhome.database.repositories.FortressRepository;
 import com.mountainhome.database.repositories.JobRepository;
 import com.mountainhome.database.services.DwarfService;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-@Log
+@Slf4j
 @Service
 public class DwarfServiceImpl implements DwarfService {
 
@@ -100,3 +102,4 @@ public class DwarfServiceImpl implements DwarfService {
         return Arrays.asList(d1, d2);
     }
 }
+*/
