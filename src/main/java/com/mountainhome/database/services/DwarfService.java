@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DwarfService {
-    DwarfEntity createDwarf(DwarfEntity dwarfEntity, int fortressId);
+    DwarfEntity createDwarf(DwarfEntity dwarfEntity, String fortressName);
 
     List<DwarfEntity> getDwarves();
 

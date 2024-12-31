@@ -44,12 +44,12 @@ public class DwarfCreationTest {
     @Test
     void createDwarfMinimalTest() {
         // Given a Fortress exists
-        fortressRepository.save(FortressEntity.builder().build());
+        fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create a dwarf at this fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortressId(1).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortressName("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then a new dwarf is returned with status 200
-        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortressId(1).id(1).birthday(LocalDate.of(0, 1, 1)).build();
+        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortressName("Mons").id(1).birthday(LocalDate.of(0, 1, 1)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
         assertNotNull(actualDwarf);
@@ -60,15 +60,15 @@ public class DwarfCreationTest {
     @Test
     void createDwarfIgnoresTest() {
         // Given a Fortress exists
-        fortressRepository.save(FortressEntity.builder().build());
+        fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with parameters that I can't set
         ResourceDto favFood = ResourceDto.builder().id(1).name("Lime").build();
-        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortressId(1)
+        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortressName("Mons")
                 .birthday(LocalDate.of(12, 12, 12))
                 .partnerId(3).favoriteFood(favFood).build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the parameter gets ignored
-        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortressId(1).id(1).birthday(LocalDate.of(0, 1, 1)).build();
+        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortressName("Mons").id(1).birthday(LocalDate.of(0, 1, 1)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
         assertNotNull(actualDwarf);
@@ -79,11 +79,11 @@ public class DwarfCreationTest {
     @ParameterizedTest
     @CsvSource(value = {
             "Nain::Every dwarf has a fortress!",
-            ":1:Every dwarf has a name!",
-            "Nain:10:This fortress doesn't exist!"}, delimiter = ':')
-    void createDwarfInvalidTest(String name, Integer fortressId, String expectedReturn) {
+            ":MyFortress:Every dwarf has a name!",
+            "Nain:MyFortress:This fortress doesn't exist!"}, delimiter = ':')
+    void createDwarfInvalidTest(String name, String fortressName, String expectedReturn) {
         // When I create a dwarf with bad parameters
-        DwarfDto dwarfDto = DwarfDto.builder().name(name).fortressId(fortressId).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name(name).fortressName(fortressName).build();
         ResponseEntity<DefaultError> actualReturn = restTemplate.postForEntity(url, dwarfDto, DefaultError.class);
         // Then an error is returned with status 400
         assertEquals(HttpStatus.BAD_REQUEST, actualReturn.getStatusCode());
@@ -94,9 +94,9 @@ public class DwarfCreationTest {
     @Test
     void createDwarfHeightTest() {
         // Given a Fortress exists
-        fortressRepository.save(FortressEntity.builder().build());
+        fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create dwarves in that fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortressId(1).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortressName("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         ResponseEntity<DwarfDto> actualReturn2 = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the height gets randomly assigned each time
@@ -114,9 +114,9 @@ public class DwarfCreationTest {
     @Test
     void createDwarfHeightIgnoreTest() {
         // Given a Fortress exists
-        fortressRepository.save(FortressEntity.builder().build());
+        fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with height parameter in that fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").heightInCm((short) 20).fortressId(1).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").heightInCm((short) 20).fortressName("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the height parameter gets ignored
         assertNotNull(actualReturn.getBody());

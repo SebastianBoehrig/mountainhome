@@ -62,14 +62,14 @@ public class DwarfController {
         if (dwarf.getName() == null) {
             log.error("got a createDwarf request without a name");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Every dwarf has a name!");
-        } else if (dwarf.getFortressId() == null) {
-            log.error("got a createDwarf request without a fortressId");
+        } else if (dwarf.getFortressName() == null) {
+            log.error("got a createDwarf request without a fortress");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Every dwarf has a fortress!");
         }
         // map
         DwarfEntity dwarfEntity = dwarfMapper.toDwarfEntity(dwarf);
         // execute
-        DwarfEntity createdDwarf = dwarfService.createDwarf(dwarfEntity, dwarf.getFortressId());
+        DwarfEntity createdDwarf = dwarfService.createDwarf(dwarfEntity, dwarf.getFortressName());
         // map n return
         return new ResponseEntity<>(dwarfMapper.toDwarfDto(createdDwarf), HttpStatus.CREATED);
     }

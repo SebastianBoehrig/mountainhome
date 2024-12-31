@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,13 +69,12 @@ public class FortressCreationTest {
     @Test
     void createFortressIdReturnTest() { //TODO: rework the ids in the data model
         // When I call the createFortress endpoint with parameters that I can't set
-        FortressDto fortressDto = FortressDto.builder().id(20).creationYear(2020).name("test").build();
+        FortressDto fortressDto = FortressDto.builder().creationYear(2020).name("test").build();
         ResponseEntity<FortressDto> actualReturn = restTemplate.postForEntity(url, fortressDto, FortressDto.class);
         // Then the id is getting ignored
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         assertNotNull(actualReturn.getBody());
-        assertNotEquals(20, actualReturn.getBody().getId());
-        assertNotEquals(2020, actualReturn.getBody().getId());
+        assertNotEquals(2020, actualReturn.getBody().getCreationYear());
     }
 
     @Test
@@ -89,7 +87,7 @@ public class FortressCreationTest {
         // Then the creationDate of the fortress is set to the current date
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         assertNotNull(actualReturn.getBody());
-        assertNotEquals(2020, actualReturn.getBody().getId());
+        assertNotEquals(2020, actualReturn.getBody().getCreationYear());
     }
 
     @Test
@@ -108,15 +106,15 @@ public class FortressCreationTest {
     @Test
     void createFortressKingMigrationTest() {
         // Given a dwarf with id 1 exists in a Fortress with id 1
-        fortressRepository.save(FortressEntity.builder().id(1).build());
+        fortressRepository.save(FortressEntity.builder().name("Dredge").build());
         dwarfRepository.save(DwarfEntity.builder().id(1).build());
         // When I call the createFortress endpoint and try to set the dwarf as king
-        FortressDto fortressDto = FortressDto.builder().kingId(1).name("test").build();
+        FortressDto fortressDto = FortressDto.builder().kingId(1).name("Fort").build();
         restTemplate.postForEntity(url, fortressDto, FortressDto.class);
         // Then the dwarf is migrated to the new fortress
         Optional<DwarfEntity> dwarf = dwarfRepository.findById(1);
         assertTrue(dwarf.isPresent());
-        assertEquals(2, dwarf.get().getFortress().getId());
+        assertEquals("Fort", dwarf.get().getFortress().getName());
     }
 
     @Test
@@ -126,7 +124,7 @@ public class FortressCreationTest {
         FortressDto fortressDto = FortressDto.builder().name("Gundabad").build();
         restTemplate.postForEntity(url, fortressDto, FortressDto.class);
         // Then I can find the fortress in the DB
-        List<FortressEntity> fortressEntityList = fortressRepository.findByName("Gundabad");
-        assertEquals("Gundabad", fortressEntityList.getFirst().getName());
+        Optional<FortressEntity> fortressOptional = fortressRepository.findByName("Gundabad");
+        assertTrue(fortressOptional.isPresent());
     }
 }

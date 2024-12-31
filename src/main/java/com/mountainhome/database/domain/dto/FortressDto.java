@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class FortressDto {
-    private Integer id;
     private String name;
     private Integer creationYear;
     private Integer kingId;

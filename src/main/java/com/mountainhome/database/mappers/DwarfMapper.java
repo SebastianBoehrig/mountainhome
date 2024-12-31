@@ -16,7 +16,7 @@ public interface DwarfMapper {
     @Mapping(target = "jobSkill", ignore = true)
     DwarfEntity toDwarfEntity(DwarfDto source);
 
-    @Mapping(source = "fortress.id", target = "fortressId")
+    @Mapping(source = "fortress.name", target = "fortressName")
     @Mapping(target = "jobSkill", ignore = true)
     DwarfDto toDwarfDto(DwarfEntity source);
 }

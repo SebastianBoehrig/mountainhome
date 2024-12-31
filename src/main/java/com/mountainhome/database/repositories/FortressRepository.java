@@ -4,9 +4,9 @@ import com.mountainhome.database.domain.entities.FortressEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FortressRepository extends CrudRepository<FortressEntity, Integer> {
-    List<FortressEntity> findByName(String name);
+    Optional<FortressEntity> findByName(String name);
 }

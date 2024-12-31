@@ -31,10 +31,10 @@ public class NewDwarfServiceImpl implements DwarfService {
     }
 
     @Override
-    public DwarfEntity createDwarf(DwarfEntity dwarfEntity, int fortressId) {
-        FortressEntity fortress = fortressRepository.findById(fortressId)
+    public DwarfEntity createDwarf(DwarfEntity dwarfEntity, String fortressName) {
+        FortressEntity fortress = fortressRepository.findByName(fortressName)
                 .orElseThrow(() -> {
-                    log.error("Got a createDwarf request with invalid fortressId: {}", fortressId);
+                    log.error("Got a createDwarf request with invalid fortressId: {}", fortressName);
                     return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
                 });
         dwarfEntity.setFortress(fortress);

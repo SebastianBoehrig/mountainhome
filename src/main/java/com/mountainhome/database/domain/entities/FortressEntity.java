@@ -16,8 +16,6 @@ import java.util.List;
 @Table(name = "fortress")
 public class FortressEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private String name;
     private Integer creationYear;
 

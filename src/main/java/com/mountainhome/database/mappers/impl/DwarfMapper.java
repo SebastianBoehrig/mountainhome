@@ -74,7 +74,7 @@ public class DwarfMapper implements Mapper<DwarfEntity, DwarfDto> {
                 skip(destination.getFavoriteFood());
                 // convert id's into real Objects
                 //using(convertIdToDwarfEntity).map(source.getPartnerId()).setPartner(null);
-                using(convertIdToFortressEntity).map(source.getFortressId()).setFortress(null);
+                //using(convertIdToFortressEntity).map(source.getFortressId()).setFortress(null);
             }
         };
     }
