@@ -18,7 +18,7 @@ public class DwarfDto {
     private LocalDate birthday;
     private Short heightInCm;
     private Integer partnerId;
-    private String fortressName;
-    private Map<String, Integer> jobSkill;
+    private String fortress;
+    private Map<String, Integer> workstationSkill;
     private ResourceDto favoriteFood;
 }

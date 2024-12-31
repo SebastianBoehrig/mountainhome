@@ -3,7 +3,7 @@ package com.mountainhome.database.mappers.impl;
 import com.mountainhome.database.domain.dto.DwarfDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
-import com.mountainhome.database.domain.entities.JobSkillEntity;
+import com.mountainhome.database.domain.entities.WorkstationSkillEntity;
 import com.mountainhome.database.mappers.Mapper;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
@@ -44,21 +44,21 @@ public class DwarfMapper implements Mapper<DwarfEntity, DwarfDto> {
     }
 
     private PropertyMap<DwarfEntity, DwarfDto> getPropertyMapTo() {
-        Converter<List<JobSkillEntity>, Map<String, Integer>> convertJobSkillListToValueMap = this::setJobSkillValueMap;
+        Converter<List<WorkstationSkillEntity>, Map<String, Integer>> convertJobSkillListToValueMap = this::setJobSkillValueMap;
         return new PropertyMap<>() {
             @Override
             protected void configure() {
                 // Note: this is not normal code. It is "EDSL" so don't get confused
                 // convert real Objects into id's
-                using(convertJobSkillListToValueMap).map(source.getJobSkill()).setJobSkill(null);
+                //using(convertJobSkillListToValueMap).map(source.getJobSkill()).setJobSkill(null);
             }
         };
     }
 
-    private Map<String, Integer> setJobSkillValueMap(MappingContext<List<JobSkillEntity>, Map<String, Integer>> context) {
-        List<JobSkillEntity> jobSkillEntityList = context.getSource();
+    private Map<String, Integer> setJobSkillValueMap(MappingContext<List<WorkstationSkillEntity>, Map<String, Integer>> context) {
+        List<WorkstationSkillEntity> jobSkillEntityList = context.getSource();
         Map<String, Integer> jobSkillValueMap = new HashMap<>();
-        jobSkillEntityList.forEach(jobSkillEntity -> jobSkillValueMap.put(jobSkillEntity.getJob().getName(), jobSkillEntity.getLevel()));
+        //jobSkillEntityList.forEach(jobSkillEntity -> jobSkillValueMap.put(jobSkillEntity.getJob().getName(), jobSkillEntity.getLevel()));
         return jobSkillValueMap;
     }
 
@@ -70,7 +70,7 @@ public class DwarfMapper implements Mapper<DwarfEntity, DwarfDto> {
                 // Note: this is not normal code. It is "EDSL" so don't get confused
                 // ignore nested Properties that the user shouldn't be able to set
                 skip(destination.getPartner());
-                skip(destination.getJobSkill());
+                //skip(destination.getJobSkill());
                 skip(destination.getFavoriteFood());
                 // convert id's into real Objects
                 //using(convertIdToDwarfEntity).map(source.getPartnerId()).setPartner(null);

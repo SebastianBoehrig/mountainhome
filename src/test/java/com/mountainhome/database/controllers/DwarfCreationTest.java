@@ -6,6 +6,7 @@ import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.helper.DefaultError;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
+import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +19,17 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 @Slf4j
 public class DwarfCreationTest {
     @Autowired
@@ -33,23 +38,26 @@ public class DwarfCreationTest {
     FortressRepository fortressRepository;
     @Autowired
     DwarfRepository dwarfRepository;
+    @Autowired
+    WorkstationTypeRepository workstationTypeRepository;
     private String url;
 
     @BeforeEach
     public void setUrl(@LocalServerPort int port) {
         url = "http://localhost:" + port + "/dwarf";
     }
-    //TODO: jobskill
 
     @Test
     void createDwarfMinimalTest() {
         // Given a Fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create a dwarf at this fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortressName("Mons").build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortress("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then a new dwarf is returned with status 200
-        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortressName("Mons").id(1).birthday(LocalDate.of(0, 1, 1)).build();
+        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortress("Mons")
+                .id(1).birthday(LocalDate.of(0, 1, 1))
+                .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
         assertNotNull(actualDwarf);
@@ -62,13 +70,18 @@ public class DwarfCreationTest {
         // Given a Fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with parameters that I can't set
-        ResourceDto favFood = ResourceDto.builder().id(1).name("Lime").build();
-        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortressName("Mons")
+        ResourceDto favFood = ResourceDto.builder().id(12).name("NotFruit").build();
+        Map<String, Integer> workstationSkill = new HashMap<>();
+        workstationSkill.put("NotThere", 12);
+        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortress("Mons")
                 .birthday(LocalDate.of(12, 12, 12))
-                .partnerId(3).favoriteFood(favFood).build();
+                .workstationSkill(workstationSkill)
+                .partnerId(12).favoriteFood(favFood).build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
-        // Then the parameter gets ignored
-        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortressName("Mons").id(1).birthday(LocalDate.of(0, 1, 1)).build();
+        // Then the parameters get ignored
+        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortress("Mons")
+                .id(1).birthday(LocalDate.of(0, 1, 1))
+                .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
         assertNotNull(actualDwarf);
@@ -83,7 +96,7 @@ public class DwarfCreationTest {
             "Nain:MyFortress:This fortress doesn't exist!"}, delimiter = ':')
     void createDwarfInvalidTest(String name, String fortressName, String expectedReturn) {
         // When I create a dwarf with bad parameters
-        DwarfDto dwarfDto = DwarfDto.builder().name(name).fortressName(fortressName).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name(name).fortress(fortressName).build();
         ResponseEntity<DefaultError> actualReturn = restTemplate.postForEntity(url, dwarfDto, DefaultError.class);
         // Then an error is returned with status 400
         assertEquals(HttpStatus.BAD_REQUEST, actualReturn.getStatusCode());
@@ -96,7 +109,7 @@ public class DwarfCreationTest {
         // Given a Fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create dwarves in that fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortressName("Mons").build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortress("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         ResponseEntity<DwarfDto> actualReturn2 = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the height gets randomly assigned each time
@@ -116,7 +129,7 @@ public class DwarfCreationTest {
         // Given a Fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with height parameter in that fortress
-        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").heightInCm((short) 20).fortressName("Mons").build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").heightInCm((short) 20).fortress("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the height parameter gets ignored
         assertNotNull(actualReturn.getBody());

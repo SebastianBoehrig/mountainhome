@@ -30,9 +30,8 @@ public class DwarfEntity {
     private FortressEntity fortress;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "dwarf")
-    private List<JobSkillEntity> jobSkill;
+    private List<WorkstationSkillEntity> workstationSkill;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    //@JoinColumn(name="favorite_food_id")
     private ResourceEntity favoriteFood;
 }

@@ -1,5 +1,6 @@
 package com.mountainhome.database.domain.entities;
 
+import com.mountainhome.database.domain.entities.ids.WorkstationSkillEntityId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,15 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "job_skill")
-public class JobSkillEntity {
+@Table(name = "workstation_skill")
+@IdClass(WorkstationSkillEntityId.class)
+public class WorkstationSkillEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private JobEntity job;
+    private WorkstationTypeEntity workstationType;
 
+    @Id
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private DwarfEntity dwarf;
 
