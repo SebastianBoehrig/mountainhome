@@ -34,12 +34,7 @@ public class NewDwarfServiceImpl implements DwarfService {
 
     @Override
     public DwarfEntity createDwarf(DwarfEntity dwarfEntity, String fortressName) {
-        FortressEntity fortress = fortressRepository.findByName(fortressName)
-                .orElseThrow(() -> {
-                    log.error("Got a createDwarf request with invalid fortressId: {}", fortressName);
-                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
-                });
-        dwarfEntity.setFortress(fortress);
+        setFortressOnDwarf(dwarfEntity, fortressName, "createDwarf");
 
         dwarfEntity.setBirthday(LocalDate.of(0, 1, 1));
 
@@ -72,8 +67,22 @@ public class NewDwarfServiceImpl implements DwarfService {
     }
 
     @Override
-    public DwarfEntity updateDwarf(int id, DwarfEntity dwarfEntity) {
-        return null;
+    public DwarfEntity updateDwarf(int id, String dwarfName, Integer partnerId, String fortressName) {
+        DwarfEntity dwarf = dwarfRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Got a createDwarf request with invalid fortressId: {}", fortressName);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
+                });
+        if (dwarfName != null) {
+            dwarf.setName(dwarfName);
+        }
+        if (fortressName != null) {
+            setFortressOnDwarf(dwarf, fortressName, "updateDwarf");
+        }
+        if (partnerId != null) {
+            //TODO
+        }
+        return dwarf;
     }
 
     @Override
@@ -84,5 +93,14 @@ public class NewDwarfServiceImpl implements DwarfService {
     @Override
     public List<DwarfEntity> marryDwarves(int id, Integer partnerId) {
         return null;
+    }
+
+    private void setFortressOnDwarf(DwarfEntity dwarf, String fortressName, String requestType) {
+        FortressEntity fortress = fortressRepository.findByName(fortressName)
+                .orElseThrow(() -> {
+                    log.error("Got a {} request with invalid fortress: {}", requestType, fortressName);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+                });
+        dwarf.setFortress(fortress);
     }
 }

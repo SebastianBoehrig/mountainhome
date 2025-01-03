@@ -14,7 +14,7 @@ public interface DwarfService {
 
     List<DwarfEntity> getDwarvesByName(String name);
 
-    DwarfEntity updateDwarf(int id, DwarfEntity dwarfEntity);
+    DwarfEntity updateDwarf(int id, String dwarfName, Integer partnerId, String fortressName);
 
     DwarfEntity migrateDwarf(int id, Integer fortressId);
 

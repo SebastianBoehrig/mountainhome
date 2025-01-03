@@ -1,6 +1,7 @@
 package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.DwarfDto;
+import com.mountainhome.database.domain.dto.DwarfUpdateDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.mappers.DwarfMapper;
 import com.mountainhome.database.services.DwarfService;
@@ -8,9 +9,7 @@ import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -72,6 +71,14 @@ public class DwarfController {
         DwarfEntity createdDwarf = dwarfService.createDwarf(dwarfEntity, dwarf.getFortress());
         // map n return
         return new ResponseEntity<>(dwarfMapper.toDwarfDto(createdDwarf), HttpStatus.CREATED);
+    }
+
+    @PatchMapping(path = "/dwarf/{dwarf_id}")
+    public ResponseEntity<DwarfDto> updateDwarf(@PathVariable("dwarf_id") int dwarfId, @RequestBody DwarfUpdateDto updates){
+        // execute
+        DwarfEntity changedDwarf = dwarfService.updateDwarf(dwarfId, updates.getName(), updates.getPartnerId(), updates.getFortress());
+        // map n return
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(changedDwarf), HttpStatus.OK);
     }
 
     /*@PatchMapping(path = "/dwarf/{id}")

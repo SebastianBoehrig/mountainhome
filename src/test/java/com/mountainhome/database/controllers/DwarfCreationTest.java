@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 @Slf4j
-public class DwarfCreationTest {
+class DwarfCreationTest {
     @Autowired
     TestRestTemplate restTemplate;
     @Autowired
