@@ -26,7 +26,7 @@ public class DwarfEntity {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private DwarfEntity partner;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private FortressEntity fortress;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "dwarf")

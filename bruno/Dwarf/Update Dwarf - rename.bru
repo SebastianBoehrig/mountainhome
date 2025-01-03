@@ -1,0 +1,17 @@
+meta {
+  name: Update Dwarf - rename
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{host}}/dwarf/{{dwarfId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Oi; DROP TABLE workstation;"
+  }
+}

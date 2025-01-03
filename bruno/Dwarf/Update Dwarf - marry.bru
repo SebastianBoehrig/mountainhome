@@ -1,0 +1,18 @@
+meta {
+  name: Update Dwarf - marry
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{host}}/dwarf/{{dwarfId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "partnerId": 3,
+    "fortress": "Gundabad2"
+  }
+}

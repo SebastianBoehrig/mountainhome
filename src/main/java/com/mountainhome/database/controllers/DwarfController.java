@@ -49,7 +49,6 @@ public class DwarfController {
     /*@PostMapping(path = "/dwarf")
     public ResponseEntity<DwarfDto> createDwarf(@RequestBody DwarfDto dwarfDto) {
         DwarfEntity dwarfEntity = dwarfMapper.mapFrom(dwarfDto);
-        // TODO: check if dwarf has age>0
         // assign fav_food.
         DwarfEntity savedDwarf = dwarfService.createDwarf(dwarfEntity);
         return new ResponseEntity<>(dwarfMapper.mapTo(savedDwarf), HttpStatus.CREATED);

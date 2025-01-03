@@ -70,7 +70,7 @@ public class NewDwarfServiceImpl implements DwarfService {
     public DwarfEntity updateDwarf(int id, String dwarfName, Integer partnerId, String fortressName) {
         DwarfEntity dwarf = dwarfRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Got a createDwarf request with invalid fortressId: {}", fortressName);
+                    log.error("Got an updateDwarf request with invalid id: {}", id);
                     return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
                 });
         if (dwarfName != null) {
@@ -80,8 +80,9 @@ public class NewDwarfServiceImpl implements DwarfService {
             setFortressOnDwarf(dwarf, fortressName, "updateDwarf");
         }
         if (partnerId != null) {
-            //TODO
+            marryDwarves(dwarf, partnerId);
         }
+        dwarfRepository.save(dwarf);
         return dwarf;
     }
 
@@ -102,5 +103,34 @@ public class NewDwarfServiceImpl implements DwarfService {
                     return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
                 });
         dwarf.setFortress(fortress);
+    }
+
+    private void marryDwarves(DwarfEntity dwarf, int partnerId) {
+        if (dwarf.getId() == partnerId) {
+            log.error("Got an updateDwarf request with same id and partnerId: {}", dwarf.getId());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A dwarf can't marry itself!");
+        }
+        DwarfEntity partner = dwarfRepository.findById(partnerId)
+                .orElseThrow(() -> {
+                    log.error("Got an updateDwarf request with invalid partnerId: {}", partnerId);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This partner-dwarf doesn't exist!");
+                });
+        if (dwarf.getFortress() != partner.getFortress()) {
+            log.error("Got an updateDwarf request with different fortresses: {}-{}, {}-{}", dwarf.getId(), dwarf.getFortress(), partnerId, partner.getFortress());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dwarves must live together to marry!");
+        }
+
+        if (dwarf.getPartner() != null) {
+            DwarfEntity dwarfOldPartner = dwarf.getPartner();
+            dwarfOldPartner.setPartner(null);
+            dwarfRepository.save(dwarfOldPartner);
+        }
+        if (partner.getPartner() != null) {
+            DwarfEntity partnerOldPartner = partner.getPartner();
+            partnerOldPartner.setPartner(null);
+            dwarfRepository.save(partnerOldPartner);
+        }
+        dwarf.setPartner(partner);
+        partner.setPartner(dwarf);
     }
 }

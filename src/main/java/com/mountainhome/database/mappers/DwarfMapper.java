@@ -22,6 +22,7 @@ public interface DwarfMapper {
     DwarfEntity toDwarfEntity(DwarfDto source);
 
     @Mapping(source = "fortress.name", target = "fortress")
+    @Mapping(source = "partner.id", target = "partnerId")
     @Mapping(target = "workstationSkill", expression = "java(toSkillMap(source.getWorkstationSkill()))")
     DwarfDto toDwarfDto(DwarfEntity source);
 
