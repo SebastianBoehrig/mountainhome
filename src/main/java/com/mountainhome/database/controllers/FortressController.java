@@ -1,6 +1,7 @@
 package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.FortressDto;
+import com.mountainhome.database.domain.dto.FortressUpdateDto;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.mappers.FortressMapper;
 import com.mountainhome.database.services.DwarfService;
@@ -8,18 +9,15 @@ import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @Slf4j
 public class FortressController {
-
+    protected FortressMapper fortressMapper;
     private final FortressService fortressService;
     private final DwarfService dwarfService;
-    protected FortressMapper fortressMapper;
 
     public FortressController(FortressService fortressService, DwarfService dwarfService, FortressMapper fortressMapper) {
         this.fortressService = fortressService;
@@ -63,17 +61,11 @@ public class FortressController {
         return new ResponseEntity<>(fortressMapper.toFortressDto(createdFortress), HttpStatus.CREATED);
     }
 
-    /*@PatchMapping(path = "/fortress/{id}")
-    public ResponseEntity<FortressDto> updateFortress(@PathVariable("id") int id, @RequestBody FortressDto fortressDto) {
-        // only for trivial arguments
-        FortressEntity fortressEntity = fortressMapper.mapFrom(fortressDto);
-        FortressEntity updatedFortress = fortressService.updateFortress(id, fortressEntity);
-        return new ResponseEntity<>(fortressMapper.mapTo(updatedFortress), HttpStatus.OK);
+    @PatchMapping(path = "/fortress/{name}")
+    public ResponseEntity<FortressDto> updateFortress(@PathVariable("name") String name, @RequestBody FortressUpdateDto updates) {
+        // execute
+        FortressEntity changedFortress = fortressService.updateFortress(name, updates.getKingId());
+        // map n return
+        return new ResponseEntity<>(fortressMapper.toFortressDto(changedFortress), HttpStatus.OK);
     }
-
-    @PatchMapping(path = "/fortress/{id}/king/{kingId}")
-    public ResponseEntity<FortressDto> crownKing(@PathVariable("id") int id, @PathVariable("kingId") Integer kingId) {
-        FortressEntity updatedFortress = fortressService.crownKing(id, kingId);
-        return new ResponseEntity<>(fortressMapper.mapTo(updatedFortress), HttpStatus.OK);
-    }*/
 }

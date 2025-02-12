@@ -67,7 +67,7 @@ public class FortressCreationTest {
     }
 
     @Test
-    void createFortressIdReturnTest() { //TODO: rework the ids in the data model
+    void createFortressIdReturnTest() { //TODO: rework the ids in the data model in general
         // When I call the createFortress endpoint with parameters that I can't set
         FortressDto fortressDto = FortressDto.builder().creationYear(2020).name("test").build();
         ResponseEntity<FortressDto> actualReturn = restTemplate.postForEntity(url, fortressDto, FortressDto.class);
@@ -78,7 +78,7 @@ public class FortressCreationTest {
     }
 
     @Test
-    void createFortressYearTest() {
+    void createFortressYearTest() { //TODO
         // Given the current date is set to 2,2,2
 
         // When I call the createFortress endpoint

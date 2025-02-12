@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,22 +45,29 @@ public class NewFortressServiceImpl implements FortressService {
     }
 
     @Override
-    public Optional<FortressEntity> getFortressById(int id) {
-        return Optional.empty();
-    }
-
-    @Override
     public List<FortressEntity> getFortressesByName(String name) {
         return null;
     }
 
     @Override
-    public FortressEntity updateFortress(int id, FortressEntity fortressEntity) {
-        return null;
-    }
-
-    @Override
-    public FortressEntity crownKing(int id, Integer kingId) {
-        return null;
+    public FortressEntity updateFortress(String name, Integer kingId) {
+        FortressEntity fortress = fortressRepository.findByName(name).orElseThrow(() -> {
+                    log.error("Got an updateFortress request with invalid name: {}", name);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+                });
+        if(kingId != null) {
+            DwarfEntity king = dwarfRepository.findById(kingId).orElseThrow(()->{
+                        log.error("Got an updateFortress request with invalid kingId: {}", kingId);
+                        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
+                        //A king never abandons his fortress
+            });
+            if (king.getFortress().getKing() == king) {
+                log.error("Got an updateFortress request with a kingId: {} that was crowned already in fortress: {}", kingId, king.getFortress().getName());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A king never abandons his fortress!");
+            }
+            fortress.setKing(king);
+            king.setFortress(fortress);
+        }
+        return fortressRepository.save(fortress);
     }
 }
