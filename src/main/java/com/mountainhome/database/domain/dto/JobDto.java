@@ -14,7 +14,6 @@ import java.util.List;
 public class JobDto {
     private Integer id;
     private String name;
-    private Integer workstationTypeId;
     private List<JobInputProductDto> inputs;
     private List<JobInputProductDto> products;
 }

@@ -61,8 +61,8 @@ public class FortressController {
         return new ResponseEntity<>(fortressMapper.toFortressDto(createdFortress), HttpStatus.CREATED);
     }
 
-    @PatchMapping(path = "/fortress/{name}")
-    public ResponseEntity<FortressDto> updateFortress(@PathVariable("name") String name, @RequestBody FortressUpdateDto updates) {
+    @PatchMapping(path = "/fortress/{fortress_name}")
+    public ResponseEntity<FortressDto> updateFortress(@PathVariable("fortress_name") String name, @RequestBody FortressUpdateDto updates) {
         // execute
         FortressEntity changedFortress = fortressService.updateFortress(name, updates.getKingId());
         // map n return
