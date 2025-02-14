@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "workstationType")
+@Table(name = "workstation_type")
 public class WorkstationTypeEntity {
     @Id
     private String name;

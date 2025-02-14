@@ -23,7 +23,7 @@ public class FortressEntity {
     private DwarfEntity king;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fortress")
-    private List<WorkstationEntity> workstations;
+    private List<WorkstationStoreEntity> workstations;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fortress")
     private List<ResourceStoreEntity> resourceStores;

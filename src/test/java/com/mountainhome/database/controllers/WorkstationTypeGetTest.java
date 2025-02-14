@@ -53,7 +53,7 @@ class WorkstationTypeGetTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
-        assertEquals("This workstationType doesn't exist!", actualResponse.getBody().getMessage());
+        assertEquals("This type of Workstation doesn't exist!", actualResponse.getBody().getMessage());
     }
 
     @Test
@@ -62,8 +62,7 @@ class WorkstationTypeGetTest {
         ResponseEntity<JobDto[]> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", JobDto[].class,"Farm");
         // Then all available Jobs of that WorkstationType are returned
         JobInputProductDto product = JobInputProductDto.builder().resourceName("Egg").amount(12).build();
-        JobDto expectedJobDto = JobDto.builder().id(1).name("Collect Eggs").products(List.of(product)).inputs(List.of()).build();
-        JobDto[] expectedResponse = {expectedJobDto};
+        JobDto[] expectedResponse = {JobDto.builder().id(1).name("Collect Eggs").products(List.of(product)).inputs(List.of()).build()};
 
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
