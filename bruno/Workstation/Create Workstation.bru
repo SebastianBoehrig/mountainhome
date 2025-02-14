@@ -1,11 +1,11 @@
 meta {
   name: Create Workstation
   type: http
-  seq: 2
+  seq: 3
 }
 
 post {
-  url: {{host}}/fortress/1/workstation/3
+  url: {{host}}/fortress/{{fortressName}}/workstation/{{workstationName}}
   body: none
   auth: none
 }

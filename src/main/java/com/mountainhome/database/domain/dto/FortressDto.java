@@ -13,6 +13,4 @@ public class FortressDto {
     private String name;
     private Integer creationYear;
     private Integer kingId;
-    //private Map<String, Integer> workstationCount;
-    //private Map<String, Integer> resourceStores;
 }

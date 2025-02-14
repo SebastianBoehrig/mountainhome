@@ -38,12 +38,6 @@ public class FortressController {
             FortressDto fortressDto = fortressMapper.mapTo(fortressEntity);
             return new ResponseEntity<>(fortressDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping(path = "/fortresses/name/{name}")
-    public List<FortressDto> getFortressesByName(@PathVariable("name") String name) {
-        List<FortressEntity> fortressEntityList = fortressService.getFortressesByName(name);
-        return fortressEntityList.stream().map(fortressMapper::mapTo).toList();
     }*/
 
     @PostMapping(path = "/fortress")

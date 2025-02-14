@@ -38,20 +38,6 @@ public class DwarfController {
             DwarfDto dwarfDto = dwarfMapper.mapTo(dwarfEntity);
             return new ResponseEntity<>(dwarfDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping(path = "/dwarves/name/{name}")
-    public List<DwarfDto> getDwarvesByName(@PathVariable("name") String name) {
-        List<DwarfEntity> dwarfEntityList = dwarfService.getDwarvesByName(name);
-        return dwarfEntityList.stream().map(dwarfMapper::mapTo).toList();
-    }*/
-
-    /*@PostMapping(path = "/dwarf")
-    public ResponseEntity<DwarfDto> createDwarf(@RequestBody DwarfDto dwarfDto) {
-        DwarfEntity dwarfEntity = dwarfMapper.mapFrom(dwarfDto);
-        // assign fav_food.
-        DwarfEntity savedDwarf = dwarfService.createDwarf(dwarfEntity);
-        return new ResponseEntity<>(dwarfMapper.mapTo(savedDwarf), HttpStatus.CREATED);
     }*/
 
     @PostMapping(path = "/dwarf")
@@ -79,24 +65,4 @@ public class DwarfController {
         // map n return
         return new ResponseEntity<>(dwarfMapper.toDwarfDto(changedDwarf), HttpStatus.OK);
     }
-
-    /*@PatchMapping(path = "/dwarf/{id}")
-    public ResponseEntity<DwarfDto> updateDwarf(@PathVariable("id") int id, @RequestBody DwarfDto dwarfDto) {
-        DwarfEntity dwarfEntity = dwarfMapper.mapFrom(dwarfDto);
-        DwarfEntity updatedDwarf = dwarfService.updateDwarf(id, dwarfEntity);
-        return new ResponseEntity<>(dwarfMapper.mapTo(updatedDwarf), HttpStatus.OK);
-    }
-
-    @PatchMapping(path = "/dwarf/{id}/fortress/{fortressId}")
-    public ResponseEntity<DwarfDto> migrateDwarf(@PathVariable("id") int id, @PathVariable("fortressId") Integer fortressId) {
-        DwarfEntity updatedDwarf = dwarfService.migrateDwarf(id, fortressId);
-        return new ResponseEntity<>(dwarfMapper.mapTo(updatedDwarf), HttpStatus.OK);
-    }
-
-    @PatchMapping(path = "/dwarf/{id}/partner/{partnerId}")
-    public ResponseEntity<List<DwarfDto>> marryDwarves(@PathVariable("id") int id, @PathVariable("partnerId") Integer partnerId) {
-        List<DwarfEntity> updatedDwarves = dwarfService.marryDwarves(id, partnerId);
-        List<DwarfDto> dwarfDtoList = updatedDwarves.stream().map(dwarfMapper::mapTo).toList();
-        return new ResponseEntity<>(dwarfDtoList, HttpStatus.OK);
-    }*/
 }

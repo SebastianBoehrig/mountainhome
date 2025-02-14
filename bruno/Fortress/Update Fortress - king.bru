@@ -1,11 +1,17 @@
 meta {
   name: Update Fortress - king
   type: http
-  seq: 6
+  seq: 5
 }
 
 patch {
   url: {{host}}/fortress/{{fortressName}}
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "kingId": 1
+  }
 }
