@@ -4,13 +4,13 @@ import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
-import com.mountainhome.database.repositories.ResourceRepository;
 import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,12 +18,10 @@ import java.util.List;
 public class NewFortressServiceImpl implements FortressService {
     private final FortressRepository fortressRepository;
     private final DwarfRepository dwarfRepository;
-    private final ResourceRepository resourceRepository;
 
-    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository, ResourceRepository resourceRepository) {
+    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository) {
         this.fortressRepository = fortressRepository;
         this.dwarfRepository = dwarfRepository;
-        this.resourceRepository = resourceRepository;
     }
 
     @Override
@@ -40,13 +38,20 @@ public class NewFortressServiceImpl implements FortressService {
     }
 
     @Override
-    public List<FortressEntity> getFortresses() {
-        return null;
+    public List<String> getFortressNames() {
+        List<String> names = new ArrayList<>();
+        for (FortressEntity fortressEntity : fortressRepository.findAll()) {
+            names.add(fortressEntity.getName());
+        }
+        return names;
     }
 
     @Override
-    public List<FortressEntity> getFortressesByName(String name) {
-        return null;
+    public FortressEntity getFortress(String name) {
+        return fortressRepository.findByName(name).orElseThrow(() -> {
+            log.error("Got an getFortress request with invalid name: {}", name);
+            return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+        });
     }
 
     @Override

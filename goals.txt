@@ -31,6 +31,8 @@ to marry dwarfs must be in the same fortress
 
 There are warning in the Tests concerning the javaagent dynamic loading. Check those out when you have time
 Deduplicate getting from a repo and error into a helper
+deduplicate the creation of resttemplate into a helper
+test: make a endpoint yml?
 
 ## time concept
 

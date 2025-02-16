@@ -7,9 +7,9 @@ import java.util.List;
 public interface FortressService {
     FortressEntity createFortress(FortressEntity fortressEntity, Integer kingId);
 
-    List<FortressEntity> getFortresses();
+    List<String> getFortressNames();
 
-    List<FortressEntity> getFortressesByName(String name);
+    FortressEntity getFortress(String name);
 
     FortressEntity updateFortress(String name, Integer kingId);
 }

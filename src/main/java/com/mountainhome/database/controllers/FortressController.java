@@ -4,7 +4,6 @@ import com.mountainhome.database.domain.dto.FortressDto;
 import com.mountainhome.database.domain.dto.FortressUpdateDto;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.mappers.FortressMapper;
-import com.mountainhome.database.services.DwarfService;
 import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,33 +11,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 public class FortressController {
     protected FortressMapper fortressMapper;
     private final FortressService fortressService;
-    private final DwarfService dwarfService;
 
-    public FortressController(FortressService fortressService, DwarfService dwarfService, FortressMapper fortressMapper) {
+    public FortressController(FortressService fortressService, FortressMapper fortressMapper) {
         this.fortressService = fortressService;
-        this.dwarfService = dwarfService;
         this.fortressMapper = fortressMapper;
     }
 
-    /*@GetMapping(path = "/fortress")
-    public List<FortressDto> getFortresses() {
-        List<FortressEntity> fortressEntityList = fortressService.getFortresses();
-        return fortressEntityList.stream().map(fortressMapper::mapTo).toList();
+    @GetMapping(path = "/fortress")
+    public List<String> getFortressList() {
+        return fortressService.getFortressNames();
     }
 
-    @GetMapping(path = "/fortress/{id}")
-    public ResponseEntity<FortressDto> getFortressById(@PathVariable("id") int id) {
-        Optional<FortressEntity> fortressOptional = fortressService.getFortressById(id);
-        return fortressOptional.map(fortressEntity -> {
-            FortressDto fortressDto = fortressMapper.mapTo(fortressEntity);
-            return new ResponseEntity<>(fortressDto, HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }*/
+    @GetMapping(path = "/fortress/{name}")
+    public ResponseEntity<FortressDto> getFortress(@PathVariable("name") String name) {
+        // execute
+        FortressEntity fortress = fortressService.getFortress(name);
+        // map n return
+        return new ResponseEntity<>(fortressMapper.toFortressDto(fortress), HttpStatus.OK);
+    }
 
     @PostMapping(path = "/fortress")
     public ResponseEntity<FortressDto> createFortress(@RequestBody FortressDto fortress) {
