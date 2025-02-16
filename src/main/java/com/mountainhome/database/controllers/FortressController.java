@@ -34,16 +34,16 @@ public class FortressController {
         return fortressService.getFortressNames();
     }
 
-    @GetMapping(path = "/fortress/{name}")
-    public FortressDto getFortress(@PathVariable("name") String name) {
+    @GetMapping(path = "/fortress/{fortress_name}")
+    public FortressDto getFortress(@PathVariable("fortress_name") String name) {
         // execute
         FortressEntity fortress = fortressService.getFortress(name);
         // map n return
         return fortressMapper.toFortressDto(fortress);
     }
 
-    @GetMapping(path="/fortress/{name}/dwarves")
-    public List<SimpleDwarfDto> getDwarfListByFortress(@PathVariable("name") String name){
+    @GetMapping(path="/fortress/{fortress_name}/dwarves")
+    public List<SimpleDwarfDto> getDwarfListByFortress(@PathVariable("fortress_name") String name){
         // execute
         List<DwarfEntity> dwarves = fortressService.getDwarfListByFortress(name);
         // map n return
