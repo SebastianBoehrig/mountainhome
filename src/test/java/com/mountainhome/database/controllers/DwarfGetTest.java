@@ -42,11 +42,11 @@ public class DwarfGetTest {
         // Given a dwarf with maximum attributes exists
         FortressEntity fortress = FortressEntity.builder().name("Fort").build();
         DwarfEntity partner = DwarfEntity.builder().id(1).name("Theresa").fortress(fortress).build();
-        dwarfRepository.save(DwarfEntity.builder().id(1).name("Dwain").fortress(fortress).partner(partner).build());
+        dwarfRepository.save(DwarfEntity.builder().id(1).name("Dwain").fortress(fortress).partner(partner).heightInCm((short) 100).build());
         // When I call the getDwarf endpoint
         ResponseEntity<DwarfDto> actualResponse = restTemplate.getForEntity(url, DwarfDto.class, 2);
         // Then the dwarf is returned with all public facing attributes
-        DwarfDto expectedResponse = DwarfDto.builder().id(2).partnerId(1).name("Dwain").workstationSkill(new HashMap<>()).fortress("Fort").build();
+        DwarfDto expectedResponse = DwarfDto.builder().id(2).partnerId(1).name("Dwain").fortress("Fort").heightInCm((short) 100).workstationSkill(new HashMap<>()).build();
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
         assertEquals(expectedResponse, actualResponse.getBody());

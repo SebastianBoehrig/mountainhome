@@ -42,7 +42,6 @@ class DwarfUpdateTest {
     }
 
     //TODO: fav food, workstation
-    //TODO: gets
 
     @Test
     void updateDwarfBadDwarfTest() {

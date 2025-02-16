@@ -9,5 +9,4 @@ public class MountainhomeApplication {
     public static void main(String[] args) {
         SpringApplication.run(MountainhomeApplication.class, args);
     }
-    // TODO look at all the startup warning msg!
 }

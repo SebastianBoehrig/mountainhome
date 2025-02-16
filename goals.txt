@@ -33,6 +33,7 @@ There are warning in the Tests concerning the javaagent dynamic loading. Check t
 Deduplicate getting from a repo and error into a helper
 deduplicate the creation of resttemplate into a helper
 test: make a endpoint yml?
+spring.jpa.open-in-view=true switch to false once everything is finished
 
 ## time concept
 
