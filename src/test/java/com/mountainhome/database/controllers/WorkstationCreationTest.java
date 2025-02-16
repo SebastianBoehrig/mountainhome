@@ -46,9 +46,9 @@ public class WorkstationCreationTest {
             "NoFort:Farm:This fortress doesn't exist!",
             "Fort:Perpetuum mobile:This type of Workstation doesn't exist!"}, delimiter = ':')
     void createOrUpdateWorkstationStoreEntityInvalidTest(String fortressName, String workstationTypeName, String expectedReturn) {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Fort").build());
-        // When I try to create a new Workstation with bad parameters
+        // When I try to create a new workstation with bad parameters
         ResponseEntity<DefaultError> actualResponse = restTemplate.postForEntity(url, null, DefaultError.class, fortressName, workstationTypeName);
         // Then an error is returned with status 400
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
@@ -58,11 +58,11 @@ public class WorkstationCreationTest {
 
     @Test
     void createOrUpdateWorkstationStoreEntityTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Fort").build());
-        // When I create a new Workstation in that Fortress
+        // When I create a new workstation in that fortress
         ResponseEntity<WorkstationStoreDto[]> actualResponse = restTemplate.postForEntity(url, null, WorkstationStoreDto[].class, "Fort", "Farm");
-        // Then the new Workstation-capacity of the Fortress is returned
+        // Then the new workstation-capacity of the fortress is returned
         WorkstationStoreDto[] expectedResponse = {WorkstationStoreDto.builder().workstationTypeName("Farm").amount(1).build()};
         assertEquals(HttpStatus.CREATED, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());

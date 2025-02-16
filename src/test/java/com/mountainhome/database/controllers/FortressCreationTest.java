@@ -105,7 +105,7 @@ public class FortressCreationTest {
 
     @Test
     void createFortressKingMigrationTest() {
-        // Given a dwarf with id 1 exists in a Fortress with id 1
+        // Given a dwarf with id 1 exists in a fortress with id 1
         fortressRepository.save(FortressEntity.builder().name("Dredge").build());
         dwarfRepository.save(DwarfEntity.builder().id(1).build());
         // When I call the createFortress endpoint and try to set the dwarf as king

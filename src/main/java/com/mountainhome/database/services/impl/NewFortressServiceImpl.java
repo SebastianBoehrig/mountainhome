@@ -55,6 +55,16 @@ public class NewFortressServiceImpl implements FortressService {
     }
 
     @Override
+    public List<DwarfEntity> getDwarfListByFortress(String fortressName) {
+        FortressEntity fortress = fortressRepository.findByName(fortressName)
+                .orElseThrow(() -> {
+                    log.error("Got a getDwarfListByFortress request with invalid fortress: {}", fortressName);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+                });
+        return dwarfRepository.findAllByFortress(fortress);
+    }
+
+    @Override
     public FortressEntity updateFortress(String name, Integer kingId) {
         FortressEntity fortress = fortressRepository.findByName(name).orElseThrow(() -> {
                     log.error("Got an updateFortress request with invalid name: {}", name);

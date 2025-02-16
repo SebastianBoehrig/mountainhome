@@ -8,5 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface WorkstationStoreMapper{
     @Mapping(source = "workstationType.name", target = "workstationTypeName")
-    WorkstationStoreDto toDto(WorkstationStoreEntity entity);
+    WorkstationStoreDto toWorkstationStoreDto(WorkstationStoreEntity entity);
 }

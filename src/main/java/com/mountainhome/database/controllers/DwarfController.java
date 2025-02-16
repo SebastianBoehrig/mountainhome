@@ -5,7 +5,6 @@ import com.mountainhome.database.domain.dto.DwarfUpdateDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.mappers.DwarfMapper;
 import com.mountainhome.database.services.DwarfService;
-import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,28 +16,19 @@ import org.springframework.web.server.ResponseStatusException;
 public class DwarfController {
     protected final DwarfMapper dwarfMapper;
     private final DwarfService dwarfService;
-    private final FortressService fortressService;
 
-    public DwarfController(DwarfService dwarfService, FortressService fortressService, DwarfMapper dwarfMapper) {
+    public DwarfController(DwarfService dwarfService, DwarfMapper dwarfMapper) {
         this.dwarfService = dwarfService;
-        this.fortressService = fortressService;
         this.dwarfMapper = dwarfMapper;
     }
 
-    /*@GetMapping(path = "/dwarves")
-    public List<DwarfDto> getDwarves() {
-        List<DwarfEntity> dwarfEntityList = dwarfService.getDwarves();
-        return dwarfEntityList.stream().map(dwarfMapper::mapTo).toList();
+    @GetMapping(path = "/dwarf/{dwarf_id}")
+    public ResponseEntity<DwarfDto> getDwarf(@PathVariable("dwarf_id") int id) {
+        // execute
+        DwarfEntity dwarf = dwarfService.getDwarf(id);
+        // map n return
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(dwarf), HttpStatus.OK);
     }
-
-    @GetMapping(path = "/dwarf/{id}")
-    public ResponseEntity<DwarfDto> getDwarfById(@PathVariable("id") int id) {
-        Optional<DwarfEntity> dwarfOptional = dwarfService.getDwarfById(id);
-        return dwarfOptional.map(dwarfEntity -> {
-            DwarfDto dwarfDto = dwarfMapper.mapTo(dwarfEntity);
-            return new ResponseEntity<>(dwarfDto, HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }*/
 
     @PostMapping(path = "/dwarf")
     public ResponseEntity<DwarfDto> createDwarf(@RequestBody DwarfDto dwarf) {

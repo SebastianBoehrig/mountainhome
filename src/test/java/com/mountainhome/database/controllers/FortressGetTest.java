@@ -1,9 +1,11 @@
 package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.FortressDto;
+import com.mountainhome.database.domain.dto.SimpleDwarfDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.helper.DefaultError;
+import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,6 +31,8 @@ public class FortressGetTest {
     private String url;
     @Autowired
     private FortressRepository fortressRepository;
+    @Autowired
+    private DwarfRepository dwarfRepository;
 
     @BeforeEach
     public void setUrl(@LocalServerPort int port) {
@@ -64,9 +69,37 @@ public class FortressGetTest {
 
     @Test
     void getFortressInvalidTest() {
-        // When I try to get a non-existing Fortress
+        // When I try to get a non-existing fortress
         ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity(url + "/{name}", DefaultError.class, "Fort");
-        // Then the public facing attributes of the fortress are returned
+        // Then an error is returned with status 400
+        assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
+        assertNotNull(actualResponse.getBody());
+        assertEquals("This fortress doesn't exist!", actualResponse.getBody().getMessage());
+    }
+
+    @Test
+    void getDwarfListByFortressTest() {
+        // Given dwarves exist in a fortress
+        FortressEntity fortress = FortressEntity.builder().name("Fort").build();
+        dwarfRepository.save(DwarfEntity.builder().id(1).name("Dwain").fortress(fortress).build());
+        dwarfRepository.save(DwarfEntity.builder().id(2).name("Oin").fortress(fortress).build());
+        // When I call the getDwarfListByFortress endpoint
+        ResponseEntity<SimpleDwarfDto[]> actualResponse = restTemplate.getForEntity(url + "/{name}/dwarves", SimpleDwarfDto[].class, "Fort");
+        // Then a list of the dwarves is returned
+        SimpleDwarfDto dwarf1 = SimpleDwarfDto.builder().id(1).name("Dwain").build();
+        SimpleDwarfDto dwarf2 = SimpleDwarfDto.builder().id(2).name("Oin").build();
+        SimpleDwarfDto[] expectedReturn = {dwarf1, dwarf2};
+
+        assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
+        assertNotNull(actualResponse.getBody());
+        assertThat(actualResponse.getBody()).usingRecursiveComparison().isEqualTo(expectedReturn);
+    }
+
+    @Test
+    void getDwarfListByFortressInvalidTest() {
+        // When try to get the dwarves of a non-existing fortress
+        ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity(url + "/{name}/dwarves", DefaultError.class, "Fort");
+        // Then an error is returned with status 400
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
         assertEquals("This fortress doesn't exist!", actualResponse.getBody().getMessage());

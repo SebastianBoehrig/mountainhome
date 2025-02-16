@@ -5,7 +5,6 @@ import com.mountainhome.database.domain.dto.DwarfUpdateDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.helper.DefaultError;
-import com.mountainhome.database.helper.RestTemplateConfig;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,7 +25,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(RestTemplateConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Slf4j
 class DwarfUpdateTest {
@@ -62,7 +59,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMigrateDwarfTest() {
-        // Given 2 Fortresses exist, and a dwarf exists in one of the fortresses
+        // Given 2 fortresses exist, and a dwarf exists in one of them
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fort1);
         fortressRepository.save(FortressEntity.builder().name("Fort-2").build());
@@ -108,7 +105,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMarryDwarvesTest() {
-        // Given 1 Fortresses exist, and 2 dwarves exists in the fortress
+        // Given a fortress exists, and 2 dwarves exists in the fortress
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fort1);
         dwarfRepository.save(DwarfEntity.builder().id(1).fortress(fort1).build());
@@ -128,7 +125,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMarryDwarvesDivorceTest() {
-        // Given 1 Fortresses exist, and 4 dwarves exists in the fortress, married in 2 pairs
+        // Given a fortress exists, and 4 dwarves exist in that fortress, married in 2 pairs
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fort1);
         DwarfEntity dwarf1 = DwarfEntity.builder().fortress(fort1).build();
@@ -166,7 +163,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMarryDwarvesBadPartnerTest() {
-        // Given a Fortresses exists, and a dwarf exists in the fortress
+        // Given a fortresses exists, and a dwarf exists in the fortress
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fort1);
         dwarfRepository.save(DwarfEntity.builder().id(1).fortress(fort1).build());
@@ -181,7 +178,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMarryDwarvesSelfTest() {
-        // Given 1 Fortresses exist, and 1 dwarves exists in the fortress
+        // Given a fortress exists, and a dwarf exists in that fortress
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fort1);
         dwarfRepository.save(DwarfEntity.builder().id(1).fortress(fort1).build());
@@ -196,7 +193,7 @@ class DwarfUpdateTest {
 
     @Test
     void updateDwarfMarryDwarvesDifferentFortressTest() {
-        // Given 1 Fortresses exist, and 1 dwarves exists in the fortress
+        // Given 2 Fortresses exist, and 2 dwarves exists in those fortresses
         FortressEntity fort1 = FortressEntity.builder().name("Fort-1").build();
         FortressEntity fort2 = FortressEntity.builder().name("Fort-2").build();
         fortressRepository.save(fort1);

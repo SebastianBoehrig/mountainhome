@@ -40,7 +40,7 @@ public class WorkstationController {
         // execute
         List<JobEntity> jobs = workstationService.getJobsByWorkstation(name);
         // map n return
-        return jobs.stream().map((jobMapper::toDto)).toList();
+        return jobs.stream().map((jobMapper::toJobDto)).toList();
     }
 
     @PostMapping(path= "fortress/{fortress_name}/workstation/{workstation_name}")
@@ -48,7 +48,7 @@ public class WorkstationController {
         // execute
         List<WorkstationStoreEntity> workstationStoreEntityList = workstationService.createOrUpdateWorkstationStoreEntity(fortressName, workstationTypeName);
         // map n return
-        List<WorkstationStoreDto> workstationStoreDtoList = workstationStoreEntityList.stream().map((workstationStoreMapper::toDto)).toList();
+        List<WorkstationStoreDto> workstationStoreDtoList = workstationStoreEntityList.stream().map((workstationStoreMapper::toWorkstationStoreDto)).toList();
         return new ResponseEntity<>(workstationStoreDtoList, HttpStatus.CREATED);
     }
 }

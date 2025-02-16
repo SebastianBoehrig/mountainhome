@@ -1,6 +1,7 @@
 package com.mountainhome.database.mappers;
 
 import com.mountainhome.database.domain.dto.DwarfDto;
+import com.mountainhome.database.domain.dto.SimpleDwarfDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.WorkstationSkillEntity;
 import org.mapstruct.Mapper;
@@ -25,6 +26,8 @@ public interface DwarfMapper {
     @Mapping(source = "partner.id", target = "partnerId")
     @Mapping(target = "workstationSkill", expression = "java(toSkillMap(source.getWorkstationSkill()))")
     DwarfDto toDwarfDto(DwarfEntity source);
+
+    SimpleDwarfDto toSimpleDwarfDto(DwarfEntity source);
 
     default Map<String, Integer> toSkillMap(List<WorkstationSkillEntity> skills) {
         return skills.stream()

@@ -4,9 +4,7 @@ import com.mountainhome.database.domain.dto.DwarfDto;
 import com.mountainhome.database.domain.dto.ResourceDto;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.helper.DefaultError;
-import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
-import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,10 +34,6 @@ class DwarfCreationTest {
     TestRestTemplate restTemplate;
     @Autowired
     FortressRepository fortressRepository;
-    @Autowired
-    DwarfRepository dwarfRepository;
-    @Autowired
-    WorkstationTypeRepository workstationTypeRepository;
     private String url;
 
     @BeforeEach
@@ -49,7 +43,7 @@ class DwarfCreationTest {
 
     @Test
     void createDwarfMinimalTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create a dwarf at this fortress
         DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortress("Mons").build();
@@ -67,7 +61,7 @@ class DwarfCreationTest {
 
     @Test
     void createDwarfIgnoresTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with parameters that I can't set
         ResourceDto favFood = ResourceDto.builder().id(12).name("NotFruit").build();
@@ -106,7 +100,7 @@ class DwarfCreationTest {
 
     @Test
     void createDwarfHeightTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I create dwarves in that fortress
         DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortress("Mons").build();
@@ -126,7 +120,7 @@ class DwarfCreationTest {
 
     @Test
     void createDwarfHeightIgnoreTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Mons").build());
         // When I try to create a dwarf with height parameter in that fortress
         DwarfDto dwarfDto = DwarfDto.builder().name("Oin").heightInCm((short) 20).fortress("Mons").build();

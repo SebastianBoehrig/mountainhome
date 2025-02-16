@@ -5,7 +5,6 @@ import com.mountainhome.database.domain.dto.FortressUpdateDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.helper.DefaultError;
-import com.mountainhome.database.helper.RestTemplateConfig;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,7 +25,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(RestTemplateConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Slf4j
 class FortressUpdateTest {
@@ -57,7 +54,7 @@ class FortressUpdateTest {
 
     @Test
     void updateFortressCrownKingBadKingTest() {
-        // Given a Fortress exists
+        // Given a fortress exists
         fortressRepository.save(FortressEntity.builder().name("Fort-1").build());
         // When I try to crown a non-existing king
         FortressUpdateDto body = FortressUpdateDto.builder().kingId(1).build();
@@ -70,9 +67,10 @@ class FortressUpdateTest {
 
     @Test
     void updateFortressCrownKingTest() {
-        // Given a Fortress and a dwarf exist
-        fortressRepository.save(FortressEntity.builder().name("Fort-1").build());
-        dwarfRepository.save(DwarfEntity.builder().id(1).build());
+        // Given a fortress and a dwarf in that fortress exist
+        FortressEntity fortress = FortressEntity.builder().name("Fort-1").build();
+        fortressRepository.save(fortress);
+        dwarfRepository.save(DwarfEntity.builder().id(1).fortress(fortress).build());
         // When I crown the dwarf
         FortressUpdateDto body = FortressUpdateDto.builder().kingId(1).build();
         ResponseEntity<FortressDto> actualResponse = restTemplate.exchange(url, HttpMethod.PATCH, new HttpEntity<>(body), FortressDto.class, "Fort-1");
@@ -85,7 +83,7 @@ class FortressUpdateTest {
 
     @Test
     void updateFortressCrownKingMigrateTest() {
-        // Given 2 Fortresses and a dwarf exist in one of them
+        // Given 2 fortresses and a dwarf exist in one of them
         FortressEntity fortress = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(FortressEntity.builder().name("Fort-2").build());
         dwarfRepository.save(DwarfEntity.builder().id(1).fortress(fortress).build());
@@ -100,7 +98,7 @@ class FortressUpdateTest {
 
     @Test
     void updateFortressCrownKingAlreadyKingTest() {
-        // Given 2 Fortresses and a dwarf exist in one of them
+        // Given 2 fortresses and a dwarf exist in one of them
         FortressEntity fortress = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fortress);
         DwarfEntity dwarf = DwarfEntity.builder().id(1).fortress(fortress).build();

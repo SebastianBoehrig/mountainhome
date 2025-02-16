@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -52,18 +51,12 @@ public class NewDwarfServiceImpl implements DwarfService {
     }
 
     @Override
-    public List<DwarfEntity> getDwarves() {
-        return null;
-    }
-
-    @Override
-    public Optional<DwarfEntity> getDwarfById(int id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<DwarfEntity> getDwarvesByName(String name) {
-        return null;
+    public DwarfEntity getDwarf(int id) {
+        return dwarfRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Got a getDwarf request with invalid id: {}", id);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
+                });
     }
 
     @Override
@@ -84,16 +77,6 @@ public class NewDwarfServiceImpl implements DwarfService {
         }
         dwarfRepository.save(dwarf);
         return dwarf;
-    }
-
-    @Override
-    public DwarfEntity migrateDwarf(int id, Integer fortressId) {
-        return null;
-    }
-
-    @Override
-    public List<DwarfEntity> marryDwarves(int id, Integer partnerId) {
-        return null;
     }
 
     private void setFortressOnDwarf(DwarfEntity dwarf, String fortressName, String requestType) {

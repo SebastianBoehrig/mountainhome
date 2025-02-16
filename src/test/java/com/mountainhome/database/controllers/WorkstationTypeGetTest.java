@@ -36,7 +36,7 @@ class WorkstationTypeGetTest {
 
     @Test
     void getWorkstationTypeNamesTest() {
-        // When I get the existing WorkstationTypes
+        // When I get the existing workstationTypes
         ResponseEntity<String[]> response = restTemplate.getForEntity("http://localhost:" + port + "/workstation", String[].class);
         // Then they match up with the values from the sql file
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -47,9 +47,9 @@ class WorkstationTypeGetTest {
 
     @Test
     void getAllWorkstationTypeJobsBadWorkstationTest() {
-        // When I get the jobs for a non-existing WorkstationType
+        // When I get the jobs for a non-existing workstationType
         ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", DefaultError.class,"Bull");
-        // Then all available Jobs of that WorkstationType are returned
+        // Then all available jobs of that workstationType are returned
 
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
@@ -58,9 +58,9 @@ class WorkstationTypeGetTest {
 
     @Test
     void getAllWorkstationTypeJobsTest() {
-        // When I get the jobs for a specific WorkstationType
+        // When I get the jobs for a specific workstationType
         ResponseEntity<JobDto[]> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", JobDto[].class,"Farm");
-        // Then all available Jobs of that WorkstationType are returned
+        // Then all available jobs of that workstationType are returned
         JobInputProductDto product = JobInputProductDto.builder().resourceName("Egg").amount(12).build();
         JobDto[] expectedResponse = {JobDto.builder().id(1).name("Collect Eggs").products(List.of(product)).inputs(List.of()).build()};
 
