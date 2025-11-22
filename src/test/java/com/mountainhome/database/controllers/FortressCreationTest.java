@@ -112,7 +112,7 @@ public class FortressCreationTest {
         // When I call the createFortress endpoint and try to set the king as king of the new fortress
         FortressDto fortressDto = FortressDto.builder().kingId(dwarf.getId()).name("test").build();
         ResponseEntity<DefaultError> actualReturn = restTemplate.postForEntity(url, fortressDto, DefaultError.class);
-        // Then an error is returned with status 400 //TODO rn
+        // Then an error is returned with status 400
         assertEquals(HttpStatus.BAD_REQUEST, actualReturn.getStatusCode());
         assertNotNull(actualReturn.getBody());
         assertEquals("A king never abandons his fortress!", actualReturn.getBody().getMessage());
