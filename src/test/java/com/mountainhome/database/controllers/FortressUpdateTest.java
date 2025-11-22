@@ -98,7 +98,7 @@ class FortressUpdateTest {
 
     @Test
     void updateFortressCrownKingAlreadyKingTest() {
-        // Given 2 fortresses and a dwarf exist in one of them
+        // Given 2 fortresses and a dwarf is king in one of them
         FortressEntity fortress = FortressEntity.builder().name("Fort-1").build();
         fortressRepository.save(fortress);
         DwarfEntity dwarf = DwarfEntity.builder().id(1).fortress(fortress).build();

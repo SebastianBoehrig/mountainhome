@@ -31,6 +31,10 @@ public class NewFortressServiceImpl implements FortressService {
                 log.error("Got a createFortress request with invalid kingId: {}", kingId);
                 return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
             });
+            fortressRepository.findByKing(king).ifPresent(fortress -> {
+                log.error("Got a createFortress request with a kingId: {} that was crowned already in fortress: {}", kingId, fortress.getName());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A king never abandons his fortress!");
+            });
             fortressEntity.setKing(king);
             king.setFortress(fortressEntity);
         }
@@ -67,14 +71,13 @@ public class NewFortressServiceImpl implements FortressService {
     @Override
     public FortressEntity updateFortress(String name, Integer kingId) {
         FortressEntity fortress = fortressRepository.findByName(name).orElseThrow(() -> {
-                    log.error("Got an updateFortress request with invalid name: {}", name);
-                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
-                });
-        if(kingId != null) {
-            DwarfEntity king = dwarfRepository.findById(kingId).orElseThrow(()->{
-                        log.error("Got an updateFortress request with invalid kingId: {}", kingId);
-                        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
-                        //A king never abandons his fortress
+            log.error("Got an updateFortress request with invalid name: {}", name);
+            return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+        });
+        if (kingId != null) {
+            DwarfEntity king = dwarfRepository.findById(kingId).orElseThrow(() -> {
+                log.error("Got an updateFortress request with invalid kingId: {}", kingId);
+                return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
             });
             if (king.getFortress().getKing() == king) {
                 log.error("Got an updateFortress request with a kingId: {} that was crowned already in fortress: {}", kingId, king.getFortress().getName());

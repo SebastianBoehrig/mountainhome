@@ -104,6 +104,21 @@ public class FortressCreationTest {
     }
 
     @Test
+    void createFortressKingRecrownTest() {
+        // Given a fortress with a king exists
+        DwarfEntity dwarf = DwarfEntity.builder().id(1).build();
+        dwarfRepository.save(dwarf);
+        fortressRepository.save(FortressEntity.builder().name("Green").king(dwarf).build());
+        // When I call the createFortress endpoint and try to set the king as king of the new fortress
+        FortressDto fortressDto = FortressDto.builder().kingId(dwarf.getId()).name("test").build();
+        ResponseEntity<DefaultError> actualReturn = restTemplate.postForEntity(url, fortressDto, DefaultError.class);
+        // Then an error is returned with status 400 //TODO rn
+        assertEquals(HttpStatus.BAD_REQUEST, actualReturn.getStatusCode());
+        assertNotNull(actualReturn.getBody());
+        assertEquals("A king never abandons his fortress!", actualReturn.getBody().getMessage());
+    }
+
+    @Test
     void createFortressKingMigrationTest() {
         // Given a dwarf with id 1 exists in a fortress with id 1
         fortressRepository.save(FortressEntity.builder().name("Dredge").build());

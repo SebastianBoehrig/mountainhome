@@ -50,7 +50,7 @@ public class DwarfGetTest {
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
         assertEquals(expectedResponse, actualResponse.getBody());
-    } //TODO: test for workstationskill
+    } //TODO: test for workstationSkill
 
     @Test
     void getDwarfInvalidTest() {
