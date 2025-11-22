@@ -22,7 +22,7 @@ services:
 
       # start with docker compose up -d
 
-      # cmd(pre 11.0.1)(higher versions then 10.11.6 dont have mysql):
+      # cmd(pre 11.0.1)(higher versions then 10.11.6 don't have mysql):
       # docker exec -it mariadb mysql --user=root --password=rootpw
 
       # cmd: docker exec -it mariadb mariadb -p rootpw

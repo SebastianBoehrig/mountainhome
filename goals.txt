@@ -9,20 +9,17 @@ add all the other stuff
 a fortress should always start with enough food to build 3 workstations
 
 TODO rn:
+date system of the fortress
 own command for jobskill of a dwarf
 own command for foodstores of a fortress
-to marry dwarfs must be in the same fortress
 
+/foodstore
 
-/dwarf/{id}/work/{workstationTypeId}/job/{jobId}
-/dwarf/{id}/work/{workstationTypeName}/job/{jobId}
-/dwarf/{id}/work/{workstationTypeId}/job/{jobName}
-/dwarf/{id}/work/{workstationTypeName}/job/{jobName} in a working controller. Returns a Map of Foodstores to fillevel (Int)
+/dwarf/energy
+/dwarf/work
 
-/workstationType/{id}/job
-/workstationType/{name}/job returns a list of all jobs on this type
+at the end simplified work commands that choose a dwarf automatically
 
-/workstationType/job returns a list of all wkokstationtypes and jobs
 
 /fortress/{id}/health returns a map of dwarves to healths. sorted by health
 
