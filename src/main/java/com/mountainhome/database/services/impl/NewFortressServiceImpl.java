@@ -2,9 +2,12 @@ package com.mountainhome.database.services.impl;
 
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorldStateEntity;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
 import com.mountainhome.database.services.FortressService;
+import com.mountainhome.database.services.WorldStateService;
+import com.mountainhome.database.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,12 @@ import java.util.List;
 public class NewFortressServiceImpl implements FortressService {
     private final FortressRepository fortressRepository;
     private final DwarfRepository dwarfRepository;
+    private final WorldStateService worldStateService;
 
-    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository) {
+    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository, WorldStateService worldStateService) {
         this.fortressRepository = fortressRepository;
         this.dwarfRepository = dwarfRepository;
+        this.worldStateService = worldStateService;
     }
 
     @Override
@@ -38,6 +43,10 @@ public class NewFortressServiceImpl implements FortressService {
             fortressEntity.setKing(king);
             king.setFortress(fortressEntity);
         }
+
+        WorldStateEntity worldState = worldStateService.getWorldState();
+        fortressEntity.setCreationYear(DateUtil.toYear(worldState.getDay()));
+
         return fortressRepository.save(fortressEntity);
     }
 
@@ -80,7 +89,8 @@ public class NewFortressServiceImpl implements FortressService {
                 return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This dwarf doesn't exist!");
             });
             if (king.getFortress().getKing() == king) {
-                log.error("Got an updateFortress request with a kingId: {} that was crowned already in fortress: {}", kingId, king.getFortress().getName());
+                log.error("Got an updateFortress request with a kingId: {} that was crowned already in fortress: {}", kingId, king.getFortress()
+                        .getName());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A king never abandons his fortress!");
             }
             fortress.setKing(king);

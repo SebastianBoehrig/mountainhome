@@ -25,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.mountainhome.database.mappers.DateMapper.*;
+import static com.mountainhome.database.util.DateUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -3,9 +3,11 @@ package com.mountainhome.database.controllers;
 import com.mountainhome.database.domain.dto.FortressDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorldStateEntity;
 import com.mountainhome.database.helper.DefaultError;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
+import com.mountainhome.database.repositories.WorldStateRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,13 +21,17 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
+import static com.mountainhome.database.util.DateUtil.DAYS_PER_MONTH;
+import static com.mountainhome.database.util.DateUtil.DAYS_PER_YEAR;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 @Slf4j
 public class FortressCreationTest {
     @Autowired
@@ -34,6 +40,8 @@ public class FortressCreationTest {
     FortressRepository fortressRepository;
     @Autowired
     DwarfRepository dwarfRepository;
+    @Autowired
+    WorldStateRepository worldStateRepository;
     private String url;
 
     @BeforeEach
@@ -47,9 +55,10 @@ public class FortressCreationTest {
         FortressDto fortressDto = FortressDto.builder().name("Gundabad").build();
         ResponseEntity<FortressDto> actualReturn = restTemplate.postForEntity(url, fortressDto, FortressDto.class);
         // Then a new fortress is returned with status 201
+        FortressDto expectedReturn = FortressDto.builder().name("Gundabad").creationYear(1).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         assertNotNull(actualReturn.getBody());
-        assertEquals("Gundabad", actualReturn.getBody().getName());
+        assertEquals(expectedReturn, actualReturn.getBody());
     }
 
     @ParameterizedTest
@@ -78,16 +87,18 @@ public class FortressCreationTest {
     }
 
     @Test
-    void createFortressYearTest() { //TODO
-        // Given the current date is set to 2,2,2
-
+    void createFortressYearTest() {
+        // Given the current date is set to 10/3/5
+        WorldStateEntity worldState = worldStateRepository.findById(1).orElseThrow();
+        worldState.setDay((5 - 1) * DAYS_PER_YEAR + (3 - 1) * DAYS_PER_MONTH + (10 - 1));
+        worldStateRepository.save(worldState);
         // When I call the createFortress endpoint
         FortressDto fortressDto = FortressDto.builder().creationYear(2020).name("test").build();
         ResponseEntity<FortressDto> actualReturn = restTemplate.postForEntity(url, fortressDto, FortressDto.class);
         // Then the creationDate of the fortress is set to the current date
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         assertNotNull(actualReturn.getBody());
-        assertNotEquals(2020, actualReturn.getBody().getCreationYear());
+        assertEquals(5, actualReturn.getBody().getCreationYear());
     }
 
     @Test

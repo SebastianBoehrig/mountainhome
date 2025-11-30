@@ -1,5 +1,5 @@
-INSERT INTO `world_state` (`day`)
-VALUES (0);
+INSERT INTO `world_state` (`id`, `day`)
+VALUES (1, 0);
 
 INSERT INTO `workstation_type` (`name`)
 VALUES ('Farm');

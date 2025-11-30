@@ -19,7 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
 
-import static com.mountainhome.database.mappers.DateMapper.MONTHS;
+import static com.mountainhome.database.util.DateUtil.MONTHS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
