@@ -6,6 +6,7 @@ import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.WorkstationSkillEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Context;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,8 @@ public interface DwarfMapper {
     @Mapping(source = "fortress.name", target = "fortress")
     @Mapping(source = "partner.id", target = "partnerId")
     @Mapping(target = "workstationSkill", expression = "java(toSkillMap(source.getWorkstationSkill()))")
-    DwarfDto toDwarfDto(DwarfEntity source);
+    @Mapping(target = "birthday", expression = "java(dateMapper.toDateDto(source.getBirthday()))")
+    DwarfDto toDwarfDto(DwarfEntity source, @Context DateMapper dateMapper);
 
     SimpleDwarfDto toSimpleDwarfDto(DwarfEntity source);
 

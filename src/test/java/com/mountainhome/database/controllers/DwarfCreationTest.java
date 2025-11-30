@@ -1,10 +1,13 @@
 package com.mountainhome.database.controllers;
 
+import com.mountainhome.database.domain.dto.DateDto;
 import com.mountainhome.database.domain.dto.DwarfDto;
 import com.mountainhome.database.domain.dto.ResourceDto;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorldStateEntity;
 import com.mountainhome.database.helper.DefaultError;
 import com.mountainhome.database.repositories.FortressRepository;
+import com.mountainhome.database.repositories.WorldStateRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mountainhome.database.mappers.DateMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,7 +37,14 @@ class DwarfCreationTest {
     TestRestTemplate restTemplate;
     @Autowired
     FortressRepository fortressRepository;
+    @Autowired
+    WorldStateRepository worldStateRepository;
     private String url;
+    private final DateDto defaultDateDto = DateDto.builder()
+            .day(1)
+            .month(MONTHS.getFirst().name())
+            .season(MONTHS.getFirst().season())
+            .year(1).build();
 
     @BeforeEach
     public void setUrl(@LocalServerPort int port) {
@@ -50,7 +60,7 @@ class DwarfCreationTest {
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then a new dwarf is returned with status 200
         DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortress("Mons")
-                .id(1).birthday(LocalDate.of(0, 1, 1))
+                .id(1).birthday(defaultDateDto)
                 .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
@@ -67,14 +77,15 @@ class DwarfCreationTest {
         ResourceDto favFood = ResourceDto.builder().id(12).name("NotFruit").build();
         Map<String, Integer> workstationSkill = new HashMap<>();
         workstationSkill.put("NotThere", 12);
+        DateDto birthdayDto = DateDto.builder().day(1).month("January").season("Fire").year(1).build();
         DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortress("Mons")
-                .birthday(LocalDate.of(12, 12, 12))
+                .birthday(birthdayDto)
                 .workstationSkill(workstationSkill)
                 .partnerId(12).favoriteFood(favFood).build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the parameters get ignored
         DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortress("Mons")
-                .id(1).birthday(LocalDate.of(0, 1, 1))
+                .id(1).birthday(defaultDateDto)
                 .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
@@ -128,5 +139,25 @@ class DwarfCreationTest {
         // Then the height parameter gets ignored
         assertNotNull(actualReturn.getBody());
         assertNotEquals((short) 20, actualReturn.getBody().getHeightInCm());
+    }
+
+    @Test
+    void createDwarfBirthdayTest() {
+        // Given a fortress exists and the current day is 10/3/5
+        fortressRepository.save(FortressEntity.builder().name("Mons").build());
+        WorldStateEntity worldState = worldStateRepository.findById(1).orElseThrow();
+        worldState.setDay((5 - 1) * DAYS_PER_YEAR + (3 - 1) * DAYS_PER_MONTH + (10 - 1));
+        worldStateRepository.save(worldState);
+        // When I create a dwarf in that fortress
+        DwarfDto dwarfDto = DwarfDto.builder().name("Oin").fortress("Mons").build();
+        ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
+        // Then the dwarf has today as a birthday
+        assertNotNull(actualReturn.getBody());
+        DateDto expectedBirthday = DateDto.builder()
+                .day(10)
+                .month(MONTHS.get(3 - 1).name())
+                .season(MONTHS.get(3 - 1).season())
+                .year(5).build();
+        assertEquals(expectedBirthday, actualReturn.getBody().getBirthday());
     }
 }

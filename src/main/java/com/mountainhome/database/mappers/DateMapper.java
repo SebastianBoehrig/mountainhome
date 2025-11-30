@@ -32,6 +32,12 @@ public interface DateMapper {
     @Mapping(target = "year", expression = "java(toYear(source.getDay()))")
     DateDto toDateDto(WorldStateEntity source);
 
+    @Mapping(target = "day", expression = "java(toDay(source))")
+    @Mapping(target = "month", expression = "java(toMonth(source))")
+    @Mapping(target = "season", expression = "java(toSeason(source))")
+    @Mapping(target = "year", expression = "java(toYear(source))")
+    DateDto toDateDto(Integer source);
+
     default Integer toDay(Integer day) {
         return day % DAYS_PER_MONTH + 1; // no day 0
     }

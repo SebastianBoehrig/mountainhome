@@ -3,6 +3,7 @@ package com.mountainhome.database.controllers;
 import com.mountainhome.database.domain.dto.DwarfDto;
 import com.mountainhome.database.domain.dto.DwarfUpdateDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
+import com.mountainhome.database.mappers.DateMapper;
 import com.mountainhome.database.mappers.DwarfMapper;
 import com.mountainhome.database.services.DwarfService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +16,13 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 public class DwarfController {
     private final DwarfMapper dwarfMapper;
+    private final DateMapper dateMapper;
     private final DwarfService dwarfService;
 
-    public DwarfController(DwarfService dwarfService, DwarfMapper dwarfMapper) {
+    public DwarfController(DwarfService dwarfService, DwarfMapper dwarfMapper, DateMapper dateMapper) {
         this.dwarfService = dwarfService;
         this.dwarfMapper = dwarfMapper;
+        this.dateMapper = dateMapper;
     }
 
     @GetMapping(path = "/dwarf/{dwarf_id}")
@@ -27,7 +30,7 @@ public class DwarfController {
         // execute
         DwarfEntity dwarf = dwarfService.getDwarf(id);
         // map n return
-        return new ResponseEntity<>(dwarfMapper.toDwarfDto(dwarf), HttpStatus.OK);
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(dwarf, dateMapper), HttpStatus.OK);
     }
 
     @PostMapping(path = "/dwarf")
@@ -45,7 +48,7 @@ public class DwarfController {
         // execute
         DwarfEntity createdDwarf = dwarfService.createDwarf(dwarfEntity, dwarf.getFortress());
         // map n return
-        return new ResponseEntity<>(dwarfMapper.toDwarfDto(createdDwarf), HttpStatus.CREATED);
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(createdDwarf, dateMapper), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/dwarf/{dwarf_id}")
@@ -53,6 +56,6 @@ public class DwarfController {
         // execute
         DwarfEntity changedDwarf = dwarfService.updateDwarf(dwarfId, updates.getName(), updates.getPartnerId(), updates.getFortress());
         // map n return
-        return new ResponseEntity<>(dwarfMapper.toDwarfDto(changedDwarf), HttpStatus.OK);
+        return new ResponseEntity<>(dwarfMapper.toDwarfDto(changedDwarf, dateMapper), HttpStatus.OK);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Data
@@ -15,7 +14,7 @@ import java.util.Map;
 public class DwarfDto {
     private Integer id;
     private String name;
-    private LocalDate birthday;
+    private DateDto birthday;
     private Short heightInCm;
     private Integer partnerId;
     private String fortress;

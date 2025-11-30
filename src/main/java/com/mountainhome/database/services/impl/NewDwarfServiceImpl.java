@@ -3,16 +3,17 @@ package com.mountainhome.database.services.impl;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
 import com.mountainhome.database.domain.entities.WorkstationSkillEntity;
+import com.mountainhome.database.domain.entities.WorldStateEntity;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
 import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import com.mountainhome.database.services.DwarfService;
+import com.mountainhome.database.services.WorldStateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,18 +25,21 @@ public class NewDwarfServiceImpl implements DwarfService {
     private final DwarfRepository dwarfRepository;
     private final FortressRepository fortressRepository;
     private final WorkstationTypeRepository workstationTypeRepository;
+    private final WorldStateService worldStateService;
 
-    public NewDwarfServiceImpl(DwarfRepository dwarfRepository, FortressRepository fortressRepository, WorkstationTypeRepository workstationTypeRepository) {
+    public NewDwarfServiceImpl(DwarfRepository dwarfRepository, FortressRepository fortressRepository, WorkstationTypeRepository workstationTypeRepository, WorldStateService worldStateService) {
         this.dwarfRepository = dwarfRepository;
         this.fortressRepository = fortressRepository;
         this.workstationTypeRepository = workstationTypeRepository;
+        this.worldStateService = worldStateService;
     }
 
     @Override
     public DwarfEntity createDwarf(DwarfEntity dwarfEntity, String fortressName) {
         setFortressOnDwarf(dwarfEntity, fortressName, "createDwarf");
 
-        dwarfEntity.setBirthday(LocalDate.of(0, 1, 1));
+        WorldStateEntity worldState = worldStateService.getWorldState();
+        dwarfEntity.setBirthday(worldState.getDay());
 
         Random random = new Random();
         dwarfEntity.setHeightInCm((short) (random.nextInt(180 - 120) + 120));
