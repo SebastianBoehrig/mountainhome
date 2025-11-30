@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class FortressController {
     private final DwarfMapper dwarfMapper;
-    protected FortressMapper fortressMapper;
+    private final FortressMapper fortressMapper;
     private final FortressService fortressService;
 
     public FortressController(FortressService fortressService, FortressMapper fortressMapper, DwarfMapper dwarfMapper) {

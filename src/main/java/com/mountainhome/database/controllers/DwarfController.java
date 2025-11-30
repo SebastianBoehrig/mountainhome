@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @Slf4j
 public class DwarfController {
-    protected final DwarfMapper dwarfMapper;
+    private final DwarfMapper dwarfMapper;
     private final DwarfService dwarfService;
 
     public DwarfController(DwarfService dwarfService, DwarfMapper dwarfMapper) {
