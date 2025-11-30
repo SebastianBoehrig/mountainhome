@@ -9,7 +9,6 @@ add all the other stuff
 a fortress should always start with enough food to build 3 workstations
 
 TODO rn:
-date system of the fortress
 own command for jobskill of a dwarf
 own command for foodstores of a fortress
 
