@@ -27,6 +27,7 @@ at the end simplified work commands that choose a dwarf automatically
 
 
 There are warning in the Tests concerning the javaagent dynamic loading. Check those out when you have time
+checkout hibernate validators
 Deduplicate getting from a repo and error into a helper
 deduplicate the creation of resttemplate into a helper
 test: make a endpoint yml?

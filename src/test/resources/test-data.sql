@@ -1,3 +1,6 @@
+INSERT INTO `world_state` (`day`)
+VALUES (0);
+
 INSERT INTO `workstation_type` (`name`)
 VALUES ('Farm');
 
