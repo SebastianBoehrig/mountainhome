@@ -2,9 +2,11 @@ package com.mountainhome.database.services.impl;
 
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorkstationStoreEntity;
 import com.mountainhome.database.domain.entities.WorldStateEntity;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
+import com.mountainhome.database.repositories.WorkstationStoreRepository;
 import com.mountainhome.database.services.FortressService;
 import com.mountainhome.database.services.WorldStateService;
 import com.mountainhome.database.util.DateUtil;
@@ -22,11 +24,13 @@ public class NewFortressServiceImpl implements FortressService {
     private final FortressRepository fortressRepository;
     private final DwarfRepository dwarfRepository;
     private final WorldStateService worldStateService;
+    private final WorkstationStoreRepository workstationStoreRepository;
 
-    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository, WorldStateService worldStateService) {
+    public NewFortressServiceImpl(FortressRepository fortressRepository, DwarfRepository dwarfRepository, WorldStateService worldStateService, WorkstationStoreRepository workstationStoreRepository) {
         this.fortressRepository = fortressRepository;
         this.dwarfRepository = dwarfRepository;
         this.worldStateService = worldStateService;
+        this.workstationStoreRepository = workstationStoreRepository;
     }
 
     @Override
@@ -75,6 +79,16 @@ public class NewFortressServiceImpl implements FortressService {
                     return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
                 });
         return dwarfRepository.findAllByFortress(fortress);
+    }
+
+    @Override
+    public List<WorkstationStoreEntity> getWorkstationsByFortress(String fortressName) {
+        FortressEntity fortress = fortressRepository.findByName(fortressName).orElseThrow(() -> {
+            log.error("Got a getWorkstationsByFortress request with invalid Fortress: {}", fortressName);
+            return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
+        });
+
+        return workstationStoreRepository.findAllByFortress(fortress);
     }
 
     @Override

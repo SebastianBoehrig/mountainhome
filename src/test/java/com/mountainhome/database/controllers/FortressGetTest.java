@@ -2,11 +2,16 @@ package com.mountainhome.database.controllers;
 
 import com.mountainhome.database.domain.dto.FortressDto;
 import com.mountainhome.database.domain.dto.SimpleDwarfDto;
+import com.mountainhome.database.domain.dto.WorkstationStoreDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorkstationStoreEntity;
+import com.mountainhome.database.domain.entities.WorkstationTypeEntity;
 import com.mountainhome.database.helper.DefaultError;
 import com.mountainhome.database.repositories.DwarfRepository;
 import com.mountainhome.database.repositories.FortressRepository;
+import com.mountainhome.database.repositories.WorkstationStoreRepository;
+import com.mountainhome.database.repositories.WorkstationTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -33,6 +39,10 @@ public class FortressGetTest {
     private FortressRepository fortressRepository;
     @Autowired
     private DwarfRepository dwarfRepository;
+    @Autowired
+    private WorkstationStoreRepository workstationStoreRepository;
+    @Autowired
+    private WorkstationTypeRepository workstationTypeRepository;
 
     @BeforeEach
     public void setUrl(@LocalServerPort int port) {
@@ -103,5 +113,48 @@ public class FortressGetTest {
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
         assertEquals("This fortress doesn't exist!", actualResponse.getBody().getMessage());
+    }
+
+    @Test
+    void getWorkstationsByFortressTest() {
+        // Given a fortress exists
+        FortressEntity fortress = FortressEntity.builder().name("Terrios").build();
+        fortressRepository.save(fortress);
+        // When I call the getWorkstationsByFortress Endpoint
+        ResponseEntity<WorkstationStoreDto[]> actualResponse = restTemplate.getForEntity(url + "/{name}/workstations", WorkstationStoreDto[].class, "Terrios");
+        // Then no workstationStores are returned
+        WorkstationStoreDto[] expectedResponse = new WorkstationStoreDto[0];
+        assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
+        assertNotNull(actualResponse.getBody());
+        assertThat(actualResponse.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void getWorkstationsByFortressInvalidTest() {
+        // When I call the getWorkstationsByFortress Endpoint
+        ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity(url + "/{name}/workstations", DefaultError.class, "Terrios");
+        // Then an error is returned with status 400
+        assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
+        assertNotNull(actualResponse.getBody());
+        assertEquals("This fortress doesn't exist!", actualResponse.getBody().getMessage());
+    }
+
+    @Test
+    void getWorkstationsByFortressFilledTest() {
+        // Given a fortress with a Workstation exists
+        FortressEntity fortress = FortressEntity.builder().name("Terrios").build();
+        WorkstationTypeEntity workstationType = workstationTypeRepository.findByName("Farm")
+                .orElseThrow(); // Exists in the sql
+        WorkstationStoreEntity workstationStore = WorkstationStoreEntity.builder().fortress(fortress)
+                .workstationType(workstationType).amount(12).build();
+        workstationStoreRepository.save(workstationStore);
+        // When I call the getWorkstationsByFortress Endpoint
+        ResponseEntity<WorkstationStoreDto[]> actualResponse = restTemplate.getForEntity(url + "/{name}/workstations", WorkstationStoreDto[].class, "Terrios");
+        // Then no workstationStores are returned
+        WorkstationStoreDto[] expectedResponse = {WorkstationStoreDto.builder().workstationTypeName("Farm")
+                .amount(12).build()};
+        assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
+        assertNotNull(actualResponse.getBody());
+        assertThat(actualResponse.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
     }
 }
