@@ -36,11 +36,8 @@ public class DateGetTest {
         // When I get the day of the app
         ResponseEntity<DateDto> actualReturn = restTemplate.getForEntity(url, DateDto.class);
         // Then the day 0 is returned with status 200
-        DateDto expectedReturn = DateDto.builder()
-                .day(1)
-                .month(MONTHS.getFirst().name())
-                .season(MONTHS.getFirst().season())
-                .year(1).build();
+        DateDto expectedReturn = DateDto.builder().day(1).month(MONTHS.getFirst().name())
+                .season(MONTHS.getFirst().season()).year(1).build();
         assertEquals(OK, actualReturn.getStatusCode());
         DateDto actualDate = actualReturn.getBody();
         assertNotNull(actualDate);

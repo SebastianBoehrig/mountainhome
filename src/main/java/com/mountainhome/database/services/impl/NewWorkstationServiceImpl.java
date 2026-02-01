@@ -55,13 +55,15 @@ public class NewWorkstationServiceImpl implements WorkstationService {
             log.error("Got a createOrUpdateWorkstationStoreEntity request with invalid Fortress: {}", fortressName);
             return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This fortress doesn't exist!");
         });
-        WorkstationTypeEntity workstationType = workstationTypeRepository.findByName(workstationTypeName).orElseThrow(() -> {
-            log.error("Got a getJobsByWorkstation request with invalid workstationType: {}", workstationTypeName);
-            return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This type of Workstation doesn't exist!");
-        });
+        WorkstationTypeEntity workstationType = workstationTypeRepository.findByName(workstationTypeName)
+                .orElseThrow(() -> {
+                    log.error("Got a createOrUpdateWorkstationStoreEntity request with invalid workstationType: {}", workstationTypeName);
+                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "This type of Workstation doesn't exist!");
+                });
 
         WorkstationStoreEntity workstationStoreEntity = workstationStoreRepository.findByFortressAndWorkstationType(fortress, workstationType)
-                .orElse(WorkstationStoreEntity.builder().fortress(fortress).workstationType(workstationType).amount(0).build());
+                .orElse(WorkstationStoreEntity.builder().fortress(fortress).workstationType(workstationType).amount(0)
+                        .build());
         workstationStoreEntity.setAmount(workstationStoreEntity.getAmount() + 1);
         workstationStoreRepository.save(workstationStoreEntity);
 

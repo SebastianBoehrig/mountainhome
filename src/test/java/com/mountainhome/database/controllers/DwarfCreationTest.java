@@ -40,11 +40,8 @@ class DwarfCreationTest {
     @Autowired
     WorldStateRepository worldStateRepository;
     private String url;
-    private final DateDto defaultDateDto = DateDto.builder()
-            .day(1)
-            .month(MONTHS.getFirst().name())
-            .season(MONTHS.getFirst().season())
-            .year(1).build();
+    private final DateDto defaultDateDto = DateDto.builder().day(1).month(MONTHS.getFirst().name())
+            .season(MONTHS.getFirst().season()).year(1).build();
 
     @BeforeEach
     public void setUrl(@LocalServerPort int port) {
@@ -59,8 +56,7 @@ class DwarfCreationTest {
         DwarfDto dwarfDto = DwarfDto.builder().name("Gloin").fortress("Mons").build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then a new dwarf is returned with status 200
-        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortress("Mons")
-                .id(1).birthday(defaultDateDto)
+        DwarfDto expectedReturn = DwarfDto.builder().name("Gloin").fortress("Mons").id(1).birthday(defaultDateDto)
                 .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
@@ -78,14 +74,11 @@ class DwarfCreationTest {
         Map<String, Integer> workstationSkill = new HashMap<>();
         workstationSkill.put("NotThere", 12);
         DateDto birthdayDto = DateDto.builder().day(1).month("January").season("Fire").year(1).build();
-        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortress("Mons")
-                .birthday(birthdayDto)
-                .workstationSkill(workstationSkill)
-                .partnerId(12).favoriteFood(favFood).build();
+        DwarfDto dwarfDto = DwarfDto.builder().name("Dain").fortress("Mons").birthday(birthdayDto)
+                .workstationSkill(workstationSkill).partnerId(12).favoriteFood(favFood).build();
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the parameters get ignored
-        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortress("Mons")
-                .id(1).birthday(defaultDateDto)
+        DwarfDto expectedReturn = DwarfDto.builder().name("Dain").fortress("Mons").id(1).birthday(defaultDateDto)
                 .workstationSkill(Map.of("Farm", 0)).build();
         assertEquals(HttpStatus.CREATED, actualReturn.getStatusCode());
         DwarfDto actualDwarf = actualReturn.getBody();
@@ -95,10 +88,7 @@ class DwarfCreationTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "Nain::Every dwarf has a fortress!",
-            ":MyFortress:Every dwarf has a name!",
-            "Nain:MyFortress:This fortress doesn't exist!"}, delimiter = ':')
+    @CsvSource(value = {"Nain::Every dwarf has a fortress!", ":MyFortress:Every dwarf has a name!", "Nain:MyFortress:This fortress doesn't exist!"}, delimiter = ':')
     void createDwarfInvalidTest(String name, String fortressName, String expectedReturn) {
         // When I create a dwarf with bad parameters
         DwarfDto dwarfDto = DwarfDto.builder().name(name).fortress(fortressName).build();
@@ -153,11 +143,8 @@ class DwarfCreationTest {
         ResponseEntity<DwarfDto> actualReturn = restTemplate.postForEntity(url, dwarfDto, DwarfDto.class);
         // Then the dwarf has today as a birthday
         assertNotNull(actualReturn.getBody());
-        DateDto expectedBirthday = DateDto.builder()
-                .day(10)
-                .month(MONTHS.get(3 - 1).name())
-                .season(MONTHS.get(3 - 1).season())
-                .year(5).build();
+        DateDto expectedBirthday = DateDto.builder().day(10).month(MONTHS.get(3 - 1).name())
+                .season(MONTHS.get(3 - 1).season()).year(5).build();
         assertEquals(expectedBirthday, actualReturn.getBody().getBirthday());
     }
 }

@@ -62,9 +62,7 @@ public class FortressCreationTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "::Every dwarven fortress has a name!",
-            "20:Home:This dwarf doesn't exist!"}, delimiter = ':')
+    @CsvSource(value = {"::Every dwarven fortress has a name!", "20:Home:This dwarf doesn't exist!"}, delimiter = ':')
     void createFortressInvalidTest(Integer kingId, String name, String expectedReturn) {
         // When I call the createFortress endpoint with bad parameters
         FortressDto fortressDto = FortressDto.builder().kingId(kingId).name(name).build();

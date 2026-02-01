@@ -3,10 +3,13 @@ package com.mountainhome.database.controllers;
 import com.mountainhome.database.domain.dto.FortressDto;
 import com.mountainhome.database.domain.dto.FortressUpdateDto;
 import com.mountainhome.database.domain.dto.SimpleDwarfDto;
+import com.mountainhome.database.domain.dto.WorkstationStoreDto;
 import com.mountainhome.database.domain.entities.DwarfEntity;
 import com.mountainhome.database.domain.entities.FortressEntity;
+import com.mountainhome.database.domain.entities.WorkstationStoreEntity;
 import com.mountainhome.database.mappers.DwarfMapper;
 import com.mountainhome.database.mappers.FortressMapper;
+import com.mountainhome.database.mappers.WorkstationStoreMapper;
 import com.mountainhome.database.services.FortressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,11 +25,13 @@ public class FortressController {
     private final DwarfMapper dwarfMapper;
     private final FortressMapper fortressMapper;
     private final FortressService fortressService;
+    private final WorkstationStoreMapper workstationStoreMapper;
 
-    public FortressController(FortressService fortressService, FortressMapper fortressMapper, DwarfMapper dwarfMapper) {
+    public FortressController(FortressService fortressService, FortressMapper fortressMapper, DwarfMapper dwarfMapper, WorkstationStoreMapper workstationStoreMapper) {
         this.fortressService = fortressService;
         this.fortressMapper = fortressMapper;
         this.dwarfMapper = dwarfMapper;
+        this.workstationStoreMapper = workstationStoreMapper;
     }
 
     @GetMapping(path = "/fortress")
@@ -42,12 +47,20 @@ public class FortressController {
         return fortressMapper.toFortressDto(fortress);
     }
 
-    @GetMapping(path="/fortress/{fortress_name}/dwarves")
-    public List<SimpleDwarfDto> getDwarfListByFortress(@PathVariable("fortress_name") String name){
+    @GetMapping(path = "/fortress/{fortress_name}/dwarves")
+    public List<SimpleDwarfDto> getDwarfListByFortress(@PathVariable("fortress_name") String name) {
         // execute
         List<DwarfEntity> dwarves = fortressService.getDwarfListByFortress(name);
         // map n return
         return dwarves.stream().map((dwarfMapper::toSimpleDwarfDto)).toList();
+    }
+
+    @GetMapping(path = "/fortress/{fortress_name}/workstations")
+    public List<WorkstationStoreDto> getWorkstationsByFortress(@PathVariable("fortress_name") String name) {
+        // execute
+        List<WorkstationStoreEntity> workstationStoreEntities = fortressService.getWorkstationsByFortress(name);
+        // map n return
+        return workstationStoreEntities.stream().map((workstationStoreMapper::toWorkstationStoreDto)).toList();
     }
 
     @PostMapping(path = "/fortress")

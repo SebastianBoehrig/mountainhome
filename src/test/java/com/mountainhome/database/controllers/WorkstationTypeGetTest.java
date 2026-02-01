@@ -48,7 +48,7 @@ class WorkstationTypeGetTest {
     @Test
     void getAllWorkstationTypeJobsBadWorkstationTest() {
         // When I get the jobs for a non-existing workstationType
-        ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", DefaultError.class,"Bull");
+        ResponseEntity<DefaultError> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", DefaultError.class, "Bull");
         // Then all available jobs of that workstationType are returned
 
         assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
@@ -59,10 +59,11 @@ class WorkstationTypeGetTest {
     @Test
     void getAllWorkstationTypeJobsTest() {
         // When I get the jobs for a specific workstationType
-        ResponseEntity<JobDto[]> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", JobDto[].class,"Farm");
+        ResponseEntity<JobDto[]> actualResponse = restTemplate.getForEntity("http://localhost:" + port + "/workstation/{workstation_name}", JobDto[].class, "Farm");
         // Then all available jobs of that workstationType are returned
         JobInputProductDto product = JobInputProductDto.builder().resourceName("Egg").amount(12).build();
-        JobDto[] expectedResponse = {JobDto.builder().id(1).name("Collect Eggs").products(List.of(product)).inputs(List.of()).build()};
+        JobDto[] expectedResponse = {JobDto.builder().id(1).name("Collect Eggs").products(List.of(product))
+                .inputs(List.of()).build()};
 
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
         assertNotNull(actualResponse.getBody());
